@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🍣 寿司パーティー しおり</title>
+
+    <!-- Reveal.js コア -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css"
+    />
+
+    <!-- Font Awesome（アイコン用） -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <!-- カスタムスタイル -->
+    <link rel="stylesheet" href="styles.css" />
+
+    <!-- Chart.js（データビジュアライゼーション用） -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <!-- スライド1: 表紙 -->
+        <section
+          id="divider-1"
+          class="section-divider"
+          data-state="is-section-divider"
+        >
+          <p
+            style="
+              font-size: 15pt;
+              color: rgba(255, 255, 255, 0.75);
+              margin: 0 0 16px 0;
+              letter-spacing: 0.18em;
+            "
+          >
+            2026.3.7 sat &nbsp;|&nbsp; 16:00 – 20:00
+          </p>
+          <h1>🍣 寿司パーティー</h1>
+          <p
+            style="
+              font-size: 22pt;
+              color: rgba(255, 255, 255, 0.9);
+              margin: 18px 0 0 0;
+              font-weight: 700;
+            "
+          >
+            黒ちゃんのしおり
+          </p>
+        </section>
+
+        <!-- スライド2: 今日の流れ -->
+        <section id="slide-2">
+          <h2>今日の流れ ✨</h2>
+          <div class="content">
+            <div class="timeline">
+              <div class="timeline-item">
+                <p class="t-time">15:00</p>
+                <div class="t-dot"></div>
+                <p class="t-desc">
+                  藤沢駅 集合 🚗 &nbsp;<span
+                    style="font-size: 13pt; color: #b09898"
+                    >（買い出し隊・余裕ある人だけ！）</span
+                  >
+                </p>
+              </div>
+              <div class="timeline-item">
+                <p class="t-time">16:00</p>
+                <div class="t-dot"></div>
+                <p class="t-desc">
+                  <strong>レンタルキッチン スタート！</strong> ✨
+                </p>
+              </div>
+              <div class="timeline-item">
+                <p class="t-time">16:30</p>
+                <div class="t-dot"></div>
+                <p class="t-desc">みんなで仕込み・準備 🔪</p>
+              </div>
+              <div class="timeline-item">
+                <p class="t-time">17:30</p>
+                <div class="t-dot"></div>
+                <p class="t-desc"><strong>いただきます！</strong> 🍣</p>
+              </div>
+              <div class="timeline-item">
+                <p class="t-time">20:00</p>
+                <div class="t-dot"></div>
+                <p class="t-desc">おひらき 🌙</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- スライド3: メニュー -->
+        <section id="slide-3">
+          <h2>メニュー 🍽</h2>
+          <div class="content" style="justify-content: center">
+            <div
+              style="
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 28px;
+              "
+            >
+              <div class="menu-card">
+                <p class="menu-emoji">🎣</p>
+                <p class="menu-tag">黒ちゃん釣りたて</p>
+                <p class="menu-name">まぐろ</p>
+              </div>
+              <div class="menu-card">
+                <p class="menu-emoji">🍣</p>
+                <p class="menu-tag">黒ちゃんが握る</p>
+                <p class="menu-name">握り寿司<br />いろいろ</p>
+              </div>
+              <div class="menu-card">
+                <p class="menu-emoji">🥗</p>
+                <p class="menu-tag">出来合い</p>
+                <p class="menu-name">オードブル</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- スライド4: 集合・場所 -->
+        <section id="slide-4">
+          <h2>集合・場所 📍</h2>
+          <div class="content" style="justify-content: center">
+            <div
+              style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px"
+            >
+              <div class="info-box">
+                <p class="ib-label">🚗 買い出し隊（任意）</p>
+                <p class="ib-value"><strong>15:00</strong><br />藤沢駅 集合</p>
+                <p class="ib-note">
+                  時間に余裕がある人は<br />車で一緒に買い出しへ！
+                </p>
+              </div>
+              <div class="info-box">
+                <p class="ib-label">📍 パーティー会場</p>
+                <p class="ib-value">
+                  <strong>16:00〜</strong><br />○○ レンタルキッチン
+                </p>
+                <p class="ib-note">
+                  詳細は後日<br />黒ちゃんからお知らせします！
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- スライド5: 参加費 -->
+        <section id="slide-5">
+          <h2>参加費 💰</h2>
+          <div
+            class="content"
+            style="
+              justify-content: center;
+              align-items: center;
+              text-align: center;
+            "
+          >
+            <div class="fee-display">
+              <p class="fee-label">おひとり</p>
+              <p class="fee-amount">¥5,000</p>
+              <p class="fee-note">当日・現金にてお願いします 🙏</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- スライド6: クロージング -->
+        <section
+          id="divider-2"
+          class="section-divider"
+          data-state="is-section-divider"
+        >
+          <h1>今日は楽しもう！🎉</h1>
+          <p
+            style="
+              font-size: 22pt;
+              color: rgba(255, 255, 255, 0.85);
+              margin-top: 24px;
+              font-weight: 700;
+            "
+          >
+            来てくれてありがとう 🍣✨
+          </p>
+        </section>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js-plugins@latest/chart/plugin.js"></script>
+    <script>
+      Reveal.initialize({
+        width: 1280,
+        height: 720,
+        margin: 0,
+        controls: true,
+        progress: true,
+        slideNumber: false,
+        hash: true,
+        transition: "slide",
+        center: false,
+        plugins: [RevealChart],
+        chart: {
+          defaults: Object.assign(
+            {
+              color: "rgba(0, 0, 0, 0.8)",
+              borderColor: "rgba(0, 0, 0, 0.8)",
+              devicePixelRatio: 2,
+            },
+            window.location.search.includes("export")
+              ? { animation: false }
+              : {},
+          ),
+        },
+      });
+    </script>
+  </body>
+</html>
