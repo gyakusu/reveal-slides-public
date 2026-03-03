@@ -51,10 +51,6 @@
   background-color: var(--background-color);
 }
 
-/* セクション区切りの背景 */
-.reveal-viewport.is-section-divider .slide-background.present {
-  background-color: var(--section-divider-bg) !important;
-}
 
 .reveal h1,
 .reveal h2,
