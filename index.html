@@ -2,229 +2,206 @@
 <html lang="ja">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>🍣 寿司パーティー しおり</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Claude Code スタートダッシュガイド - 2026年3月27日</title>
 
-    <!-- Reveal.js コア -->
+    <!-- Reveal.js コアスタイル -->
     <link
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css"
+      href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/reveal.css"
     />
     <link
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css"
+      href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/theme/white.css"
     />
-
-    <!-- Font Awesome（アイコン用） -->
     <link
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/highlight/monokai.css"
     />
 
-    <!-- カスタムスタイル -->
-    <link rel="stylesheet" href="styles.css" />
+    <!-- PDF印刷サポート: ?print-pdf をURLに追加すると印刷用レイアウトに切り替わる -->
+    <script>
+      var link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.type = "text/css";
+      link.href = window.location.search.match(/print-pdf/gi)
+        ? "https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/print/pdf.css"
+        : "https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/print/paper.css";
+      document.head.appendChild(link);
+    </script>
 
-    <!-- Chart.js（データビジュアライゼーション用） -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts（Noto Sans JP） -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- プレゼンテーションテーマ（共通テンプレート） -->
+    <link rel="stylesheet" href="../../common/css/presentation-theme.css" />
   </head>
+
   <body>
+    <!-- NSKロゴ（右上固定） -->
+    <img src="images/NSK.png" alt="NSK Logo" class="nsk-logo" />
+
+    <!-- カスタムフッター -->
+    <div class="reveal-footer">
+      <div class="copyright">Copyright NSK Ltd. All Rights Reserved.</div>
+      <div class="page-number" id="page-number">1 / 1</div>
+    </div>
+
     <div class="reveal">
-      <div class="slides">
-        <!-- スライド1: 表紙 -->
-        <section
-          id="divider-1"
-          class="section-divider"
-          data-state="is-section-divider"
-          data-background-color="#F06B6B"
-        >
-          <p
-            style="
-              font-size: 15pt;
-              color: rgba(255, 255, 255, 0.75);
-              margin: 0 0 16px 0;
-              letter-spacing: 0.18em;
-            "
-          >
-            2026.3.7 sat &nbsp;|&nbsp; 16:00 – 20:00
-          </p>
-          <h1>🍣 寿司パーティー</h1>
-          <p
-            style="
-              font-size: 22pt;
-              color: rgba(255, 255, 255, 0.9);
-              margin: 18px 0 0 0;
-              font-weight: 700;
-            "
-          >
-            黒ちゃんのしおり
-          </p>
-        </section>
-
-        <!-- スライド2: 今日の流れ -->
-        <section id="slide-2">
-          <h2>今日の流れ ✨</h2>
-          <div class="content">
-            <div class="timeline">
-              <div class="timeline-item">
-                <p class="t-time">15:00</p>
-                <div class="t-dot"></div>
-                <p class="t-desc">
-                  藤沢駅 集合 🚗 &nbsp;<span
-                    style="font-size: 13pt; color: #b09898"
-                    >（買い出し隊・余裕ある人だけ！）</span
-                  >
-                </p>
-              </div>
-              <div class="timeline-item">
-                <p class="t-time">16:00</p>
-                <div class="t-dot"></div>
-                <p class="t-desc">
-                  <strong>レンタルキッチン スタート！</strong> ✨
-                </p>
-              </div>
-              <div class="timeline-item">
-                <p class="t-time">16:30</p>
-                <div class="t-dot"></div>
-                <p class="t-desc">みんなで仕込み・準備 🔪</p>
-              </div>
-              <div class="timeline-item">
-                <p class="t-time">17:30</p>
-                <div class="t-dot"></div>
-                <p class="t-desc"><strong>いただきます！</strong> 🍣</p>
-              </div>
-              <div class="timeline-item">
-                <p class="t-time">20:00</p>
-                <div class="t-dot"></div>
-                <p class="t-desc">おひらき 🌙</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- スライド3: メニュー -->
-        <section id="slide-3">
-          <h2>メニュー 🍽</h2>
-          <div class="content" style="justify-content: center">
-            <div
-              style="
-                display: grid;
-                grid-template-columns: repeat(3, 1fr);
-                gap: 28px;
-              "
-            >
-              <div class="menu-card">
-                <p class="menu-emoji">🎣</p>
-                <p class="menu-tag">黒ちゃん釣りたて</p>
-                <p class="menu-name">まぐろ</p>
-              </div>
-              <div class="menu-card">
-                <p class="menu-emoji">🍣</p>
-                <p class="menu-tag">黒ちゃんが握る</p>
-                <p class="menu-name">握り寿司<br />いろいろ</p>
-              </div>
-              <div class="menu-card">
-                <p class="menu-emoji">🥗</p>
-                <p class="menu-tag">出来合い</p>
-                <p class="menu-name">オードブル</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- スライド4: 集合・場所 -->
-        <section id="slide-4">
-          <h2>集合・場所 📍</h2>
-          <div class="content" style="justify-content: center">
-            <div
-              style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px"
-            >
-              <div class="info-box">
-                <p class="ib-label">🚗 買い出し隊（任意）</p>
-                <p class="ib-value"><strong>15:00</strong><br />藤沢駅 集合</p>
-                <p class="ib-note">
-                  時間に余裕がある人は<br />車で一緒に買い出しへ！
-                </p>
-              </div>
-              <div class="info-box">
-                <p class="ib-label">📍 パーティー会場</p>
-                <p class="ib-value">
-                  <strong>16:00〜</strong><br />マルヴィエント 湘南鵠沼
-                </p>
-                <p class="ib-note">
-                  レンタルキッチン<br />江ノ島電鉄線 柳小路駅 徒歩1分
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- スライド5: 参加費 -->
-        <section id="slide-5">
-          <h2>参加費 💰</h2>
-          <div
-            class="content"
-            style="
-              justify-content: center;
-              align-items: center;
-              text-align: center;
-            "
-          >
-            <div class="fee-display">
-              <p class="fee-label">おひとり</p>
-              <p class="fee-amount">¥5,000</p>
-              <p class="fee-note">精算は現金かPayPayで 🙏</p>
-            </div>
-          </div>
-        </section>
-
-        <!-- スライド6: クロージング -->
-        <section
-          id="divider-2"
-          class="section-divider"
-          data-state="is-section-divider"
-          data-background-color="#F06B6B"
-        >
-          <h1>今日は楽しもう！🎉</h1>
-          <p
-            style="
-              font-size: 22pt;
-              color: rgba(255, 255, 255, 0.85);
-              margin-top: 24px;
-              font-weight: 700;
-            "
-          >
-            来てくれてありがとう 🍣✨
-          </p>
-        </section>
+      <div class="slides" id="slides-container">
+        <!-- スライドは slides.html から動的に読み込まれます -->
       </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/reveal.js-plugins@latest/chart/plugin.js"></script>
+    <!-- Reveal.js コア -->
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/reveal.js"></script>
+
+    <!-- Reveal.js プラグイン -->
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/notes/notes.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/highlight/highlight.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/math/math.js"></script>
+
+    <!-- Mermaid（図表描画） -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js-mermaid-plugin@11.6.0/plugin/mermaid/mermaid.js"></script>
+
     <script>
-      Reveal.initialize({
-        width: 1280,
-        height: 720,
-        margin: 0,
-        controls: true,
-        progress: true,
-        slideNumber: false,
-        hash: true,
-        transition: "slide",
-        center: false,
-        plugins: [RevealChart],
-        chart: {
-          defaults: Object.assign(
-            {
-              color: "rgba(0, 0, 0, 0.8)",
-              borderColor: "rgba(0, 0, 0, 0.8)",
-              devicePixelRatio: 2,
-            },
-            window.location.search.includes("export")
-              ? { animation: false }
-              : {},
-          ),
-        },
+      // slides.html を読み込んで挿入する
+      async function loadSlides() {
+        try {
+          const response = await fetch("slides.html");
+          const html = await response.text();
+
+          // 読み込んだHTMLをパース
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, "text/html");
+
+          // <div class="slides"> の内容を取得
+          const slidesContent = doc.querySelector(".slides");
+          if (slidesContent) {
+            // コンテナに挿入
+            document.getElementById("slides-container").innerHTML =
+              slidesContent.innerHTML;
+          }
+
+          // スライド読み込み完了後、Reveal.js を初期化
+          initReveal();
+        } catch (error) {
+          console.error("スライドの読み込みに失敗しました:", error);
+        }
+      }
+
+      // Reveal.js の初期化
+      function initReveal() {
+        Reveal.initialize({
+          // ナビゲーション設定
+          controls: false, // ナビゲーション矢印（プレゼン時は不要）
+          progress: true, // 画面下部にプログレスバーを表示
+          slideNumber: false, // デフォルト番号は非表示（カスタム番号を使用）
+          hash: true, // URLハッシュにスライド番号を反映（ブックマーク可能）
+          history: true, // ブラウザ履歴に記録（戻る/進むで移動可能）
+          keyboard: true, // キーボードナビゲーション（→, ←, Space など）
+          overview: true, // Escキーで全スライドの俯瞰表示
+
+          // レイアウト
+          center: false, // 垂直中央揃えを無効（コンテンツを上寄せ）
+          touch: true, // タッチ/スワイプ操作を有効化
+
+          // スライドサイズ（16:9 フルHD）
+          width: 1600,
+          height: 900,
+
+          // トランジション
+          transition: "slide",
+          transitionSpeed: "default",
+
+          // プラグイン
+          plugins: [RevealNotes, RevealHighlight, RevealMath, RevealMermaid],
+        });
+
+        // ページ番号を「現在 / 合計」形式で更新する
+        function updatePageNumber() {
+          const current = Reveal.getIndices().h + 1;
+          const total = Reveal.getTotalSlides();
+          document.getElementById("page-number").textContent =
+            current + " / " + total;
+        }
+
+        // ケース1のコンテンツを動的に切り替える
+        function updateCase1Content(event) {
+          const currentSlide = event.currentSlide;
+          const container = document.getElementById("dynamic-content-case1");
+
+          if (!container) return;
+
+          // data-case1-view属性を確認
+          const viewType = currentSlide.getAttribute("data-case1-view");
+
+          if (viewType === "static") {
+            // 静的画像を表示
+            container.innerHTML = `
+              <img src="images/report1.png" alt="レポート1"
+                style="width: 100%; max-width: 800px; border: 2px solid #ddd; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" />
+            `;
+          } else if (viewType === "interactive") {
+            // iframeを表示
+            container.innerHTML = `
+              <div style="position: relative; width: 100%; height: 650px;">
+                <iframe src="http://ans02746:8501/" style="width: 100%; height: 100%; border: 2px solid #ddd; border-radius: 6px;">
+                </iframe>
+              </div>
+            `;
+          }
+        }
+
+        Reveal.on("slidechanged", (event) => {
+          updatePageNumber();
+          updateCase1Content(event);
+        });
+
+        Reveal.on("ready", (event) => {
+          updatePageNumber();
+          updateCase1Content(event);
+        });
+      }
+
+      // ページ読み込み時にスライドを読み込む
+      loadSlides();
+
+      const updateVisibility = (isStep2) => {
+        const staticView = document.getElementById("view-static");
+        const interactiveView = document.getElementById("view-interactive");
+
+        if (isStep2) {
+          staticView.style.display = "none";
+          interactiveView.style.display = "block";
+        } else {
+          staticView.style.display = "block";
+          interactiveView.style.display = "none";
+        }
+      };
+
+      // Fragmentの表示状態を監視
+      Reveal.on("fragmentshown", (event) => {
+        if (event.fragment.id === "view-interactive") updateVisibility(true);
+      });
+
+      Reveal.on("fragmenthidden", (event) => {
+        if (event.fragment.id === "view-interactive") updateVisibility(false);
+      });
+
+      // セクションを離れた時にリセットするためのクリーンアップ（任意）
+      Reveal.on("slidechanged", (event) => {
+        if (event.previousSlide?.id === "case1-section")
+          updateVisibility(false);
       });
     </script>
   </body>
