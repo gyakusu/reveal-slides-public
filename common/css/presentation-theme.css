@@ -63,7 +63,7 @@
 }
 
 .reveal h3 {
-    font-size: 20pt;
+    font-size: 24pt;
     font-weight: 600;
     color: var(--nsk-red);
     margin-top: 20px;
@@ -71,7 +71,7 @@
 }
 
 .reveal h4 {
-    font-size: 17pt;
+    font-size: 20pt;
     font-weight: 600;
     color: var(--nsk-navy);
 }
@@ -81,7 +81,7 @@
    ================================================================ */
 .reveal p,
 .reveal li {
-    font-size: 17pt;
+    font-size: 20pt;
     color: #2A2A2A;
     line-height: 1.65;
 }
@@ -166,7 +166,7 @@
    コードブロック
    ================================================================ */
 .reveal code {
-    font-size: 15pt;
+    font-size: 17pt;
     background: #F0F0F0;
     padding: 2px 8px;
     border-radius: 4px;
@@ -183,7 +183,7 @@
 }
 
 .reveal pre code {
-    font-size: 14pt;
+    font-size: 16pt;
     background: transparent;
     padding: 0;
     color: inherit;
@@ -208,7 +208,7 @@
 
 .reveal blockquote p {
     margin: 0;
-    font-size: 17pt;
+    font-size: 20pt;
 }
 
 /* ================================================================
@@ -295,7 +295,7 @@
     width: 100%;
     border-collapse: collapse;
     margin: 12px 0;
-    font-size: 15pt;
+    font-size: 17pt;
 }
 
 .reveal table th {

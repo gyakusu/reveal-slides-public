@@ -3,9 +3,8 @@
   <!-- スライド 1: タイトル -->
   <section class="section-divider" style="display: flex; flex-direction: column; justify-content: center; height: 100%;">
     <h1>Claude Code<br>スタートダッシュガイド</h1>
-    <p style="font-size: 20pt; color: var(--nsk-navy); margin-top: 16px;">
-      対象: LLMでコード相談の経験があり、Pythonが書ける新入社員<br>
-      前提: Claude Codeについては知識ゼロからスタート
+    <p style="font-size: 22pt; color: var(--nsk-navy); margin-top: 16px;">
+      対象: Python経験のある新入社員 ／ 前提: Claude Code知識ゼロ
     </p>
   </section>
 
@@ -13,27 +12,25 @@
   <section>
     <h2>このガイドの思想</h2>
     <div class="content">
-      <p style="font-size: 17pt; color: #555; margin-bottom: 20px;">Claude Codeは強力だが、「道具としての性質」を理解しないと効果が出ない。核となる考え方は3つ。</p>
+      <p style="font-size: 20pt; color: #555; margin-bottom: 20px;">道具の性質を理解しないと効果が出ない。核となる考え方は3つ。</p>
       <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 24px;">
         <div style="background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%); padding: 20px 24px; border-radius: 10px; border-left: 5px solid var(--nsk-red);">
-          <h3 style="margin-top: 0; font-size: 18pt;">① セッションを使い捨てろ</h3>
-          <p style="font-size: 15pt; line-height: 1.6; color: #444;">LLMのコンテキストは有限の資源。相談と実装を同じセッションで行わず、結論をファイルに書き出して新しいセッションで次に進む。</p>
+          <h3 style="margin-top: 0; font-size: 21pt;">① セッションを使い捨てろ</h3>
+          <p style="font-size: 18pt; line-height: 1.6; color: #444;">コンテキストは有限。結論をファイルに書き出し、新セッションで次へ進む。</p>
         </div>
         <div style="background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%); padding: 20px 24px; border-radius: 10px; border-left: 5px solid var(--nsk-red);">
-          <h3 style="margin-top: 0; font-size: 18pt;">② ツールに任せろ</h3>
-          <p style="font-size: 15pt; line-height: 1.6; color: #444;">集計や統計処理はPythonスクリプトで。品質管理はmypyやruffで。LLMは確率的に動く。決定的な処理はツールに委ね、LLMはそれを「使う側」に徹する。</p>
+          <h3 style="margin-top: 0; font-size: 21pt;">② ツールに任せろ</h3>
+          <p style="font-size: 18pt; line-height: 1.6; color: #444;">LLMは確率的。決定的な処理はスクリプトやリンターに委ねる。</p>
         </div>
         <div style="background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%); padding: 20px 24px; border-radius: 10px; border-left: 5px solid var(--nsk-red);">
-          <h3 style="margin-top: 0; font-size: 18pt;">③ コンテキストを守れ</h3>
-          <p style="font-size: 15pt; line-height: 1.6; color: #444;">探索や分析はサブエージェントに委譲し、メインには結果だけを返させる。必要な知識は必要なときだけ読み込む。</p>
+          <h3 style="margin-top: 0; font-size: 21pt;">③ コンテキストを守れ</h3>
+          <p style="font-size: 18pt; line-height: 1.6; color: #444;">探索はサブエージェントに委譲。必要な知識は必要なときだけ読み込む。</p>
         </div>
       </div>
       <div style="background: #FFF8E1; padding: 20px 28px; border-radius: 8px; border-left: 5px solid #F59E0B;">
-        <p style="font-size: 16pt; line-height: 1.7; margin: 0; color: #333;">
-          3番目の「必要なときだけ読み込む」を、このガイドでは<strong>段階的開示</strong>と呼ぶ。<br>
-          LLMにとっての段階的開示とは、目的に応じた<strong>動的コンテキスト読み込み</strong>のことだ。<br>
-          CLAUDE.mdに何でも書くのではなく、特定タスクで必要になる知識はその瞬間にだけロードする。<br>
-          この段階的開示を実現する最も有用な仕組みが <strong>Skills</strong> である。
+        <p style="font-size: 19pt; line-height: 1.7; margin: 0; color: #333;">
+          「必要なときだけ読み込む」＝<strong>段階的開示</strong>。<br>
+          常駐知識はCLAUDE.md、タスク固有の知識は <strong>Skills</strong> で動的にロードする。
         </p>
       </div>
     </div>
@@ -52,16 +49,16 @@ npm install -g @anthropic-ai/claude-code
 # プロジェクトのルートに移動して起動
 cd your-project
 claude</code></pre>
-          <p style="font-size: 16pt; color: #555; margin-top: 16px;">初回起動時にログインを求められる。それだけで準備完了。</p>
+          <p style="font-size: 19pt; color: #555; margin-top: 16px;">初回起動時にログインするだけで準備完了。</p>
         </div>
         <div>
           <h3>確認コマンド</h3>
           <pre><code class="language-bash">claude --version    # バージョン確認
 claude --help       # ヘルプ表示</code></pre>
           <div style="background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%); padding: 20px 24px; border-radius: 8px; border-left: 5px solid var(--nsk-red); margin-top: 24px;">
-            <p style="font-size: 16pt; line-height: 1.7; margin: 0; color: #333;">
+            <p style="font-size: 19pt; line-height: 1.7; margin: 0; color: #333;">
               <strong>前提:</strong> Node.js 18以上<br>
-              <strong>起動:</strong> プロジェクトのルートディレクトリで <code>claude</code><br>
+              <strong>起動:</strong> プロジェクトルートで <code>claude</code><br>
               <strong>終了:</strong> <code>/exit</code> または Ctrl+C
             </p>
           </div>
@@ -74,26 +71,25 @@ claude --help       # ヘルプ表示</code></pre>
   <section>
     <h2>CLAUDE.md — プロジェクトの「取扱説明書」</h2>
     <div class="content">
-      <p style="font-size: 16pt; color: #555; margin-bottom: 20px;">
-        CLAUDE.mdはプロジェクトルートに置くMarkdownファイルで、Claude Codeがセッション開始時に毎回読む。<br>
-        人間にとっての「プロジェクトのREADME」に相当するが、読者がLLMである点が異なる。
+      <p style="font-size: 19pt; color: #555; margin-bottom: 20px;">
+        セッション開始時に毎回読まれるMarkdown。LLM向けのプロジェクトREADME。
       </p>
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px;">
         <div>
           <h3 style="color: #27ae60;">書くべきこと</h3>
-          <ul style="font-size: 16pt; line-height: 1.9;">
-            <li>ビルド・テスト・リントの実行コマンド</li>
-            <li>プロジェクト構造の概要（モノレポならアプリとパッケージの対応）</li>
-            <li>コーディング規約のうち、ツールで強制できないもの（設計方針など）</li>
-            <li>「やってはいけないこと」の明示</li>
+          <ul style="font-size: 19pt; line-height: 1.9;">
+            <li>ビルド・テスト・リントのコマンド</li>
+            <li>プロジェクト構造の概要</li>
+            <li>ツールで強制できない設計方針</li>
+            <li>「やってはいけないこと」</li>
           </ul>
         </div>
         <div>
           <h3 style="color: #e74c3c;">書いてはいけないこと</h3>
-          <ul style="font-size: 16pt; line-height: 1.9;">
-            <li>ツールで強制できるルール（フォーマットはprettier、型チェックはmypy）</li>
-            <li>コードスニペットのコピペ（すぐ陳腐化する。ファイルパスで参照せよ）</li>
-            <li>何でもかんでも（指示が多すぎると全体的に無視されはじめる）</li>
+          <ul style="font-size: 19pt; line-height: 1.9;">
+            <li>ツールで強制できるルール（prettier、mypy等）</li>
+            <li>コードのコピペ（パスで参照せよ）</li>
+            <li>詰め込みすぎ（多いと無視される）</li>
           </ul>
         </div>
       </div>
@@ -132,11 +128,11 @@ Python 3.12 / FastAPI / PostgreSQL のバックエンドAPI。
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 36px; align-items: start;">
         <div>
           <h3>重要な原則</h3>
-          <ul style="font-size: 16pt; line-height: 2.0;">
-            <li><strong>短く保て。</strong> 各行について「これを消したらClaudeが間違えるか？」と自問する。NOなら消す。</li>
-            <li><strong>ポインタを使え。</strong> コードをコピペするのではなく <code>src/api/errors.py を参照</code> と書く。</li>
-            <li><strong>@構文でファイルを参照できる。</strong> <code>@README.md</code> や <code>@docs/architecture.md</code> で外部ファイルを読み込める。</li>
-            <li><strong>定期的に手入れしろ。</strong> Claudeが指示を無視し始めたら、CLAUDE.mdが肥大化しているサイン。</li>
+          <ul style="font-size: 19pt; line-height: 2.0;">
+            <li><strong>短く保て。</strong> 消してもClaudeが間違えないなら消す。</li>
+            <li><strong>ポインタを使え。</strong> コピペでなく <code>src/api/errors.py を参照</code> と書く。</li>
+            <li><strong>@構文で参照。</strong> <code>@README.md</code> で外部ファイルを読み込める。</li>
+            <li><strong>定期的に手入れ。</strong> 指示無視が増えたら肥大化のサイン。</li>
           </ul>
         </div>
         <div>
@@ -172,7 +168,7 @@ Python 3.12 / FastAPI / PostgreSQL のバックエンドAPI。
   <section>
     <h2>基本ワークフロー — セッションの使い捨て</h2>
     <div class="content">
-      <p style="font-size: 17pt; color: #333; margin-bottom: 20px;">最も大事な習慣: <strong>1タスク1セッション</strong>。LLMのコンテキストは積み重なるほど品質が劣化する。</p>
+      <p style="font-size: 20pt; color: #333; margin-bottom: 20px;">最も大事な習慣: <strong>1タスク1セッション</strong>。コンテキストが積むほど品質は落ちる。</p>
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start;">
         <div>
           <h3>推奨フロー</h3>
@@ -196,9 +192,9 @@ Python 3.12 / FastAPI / PostgreSQL のバックエンドAPI。
 「実装計画を
  docs/plan-user-api.mdにまとめて」</code></pre>
           <div style="background: #E8F5E9; padding: 16px 20px; border-radius: 8px; border-left: 4px solid #27ae60; margin-top: 16px;">
-            <p style="font-size: 15pt; line-height: 1.6; margin: 0; color: #333;">
-              次のセッションではそのファイルを読むだけで済む。<br>
-              コンテキストウィンドウには<strong>結論だけ</strong>が入り、議論の過程は入らない。
+            <p style="font-size: 18pt; line-height: 1.6; margin: 0; color: #333;">
+              次のセッションではファイルを読むだけ。<br>
+              コンテキストには<strong>結論だけ</strong>が入る。
             </p>
           </div>
         </div>
@@ -213,19 +209,19 @@ Python 3.12 / FastAPI / PostgreSQL のバックエンドAPI。
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 8px;">
         <div style="background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%); padding: 24px 28px; border-radius: 10px; border-left: 5px solid var(--nsk-navy);">
           <h3 style="color: var(--nsk-navy); margin-top: 0;">/compact</h3>
-          <p style="font-size: 16pt; line-height: 1.7; color: #333;">コンテキストを要約して圧縮する。長くなってきたら手動で実行する。</p>
+          <p style="font-size: 19pt; line-height: 1.7; color: #333;">コンテキストを要約・圧縮する。</p>
         </div>
         <div style="background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%); padding: 24px 28px; border-radius: 10px; border-left: 5px solid var(--nsk-navy);">
           <h3 style="color: var(--nsk-navy); margin-top: 0;">/clear</h3>
-          <p style="font-size: 16pt; line-height: 1.7; color: #333;">タスクを切り替えるときにリセット。コンテキストを完全にクリアして新鮮な状態で再開する。</p>
+          <p style="font-size: 19pt; line-height: 1.7; color: #333;">タスク切り替え時にコンテキストをリセット。</p>
         </div>
         <div style="background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%); padding: 24px 28px; border-radius: 10px; border-left: 5px solid var(--nsk-navy);">
           <h3 style="color: var(--nsk-navy); margin-top: 0;">/model haiku</h3>
-          <p style="font-size: 16pt; line-height: 1.7; color: #333;">機械的な作業（リネーム、フォーマット確認など）はHaikuで十分。コスト・速度ともに優位。</p>
+          <p style="font-size: 19pt; line-height: 1.7; color: #333;">機械的な作業はHaikuで十分。速くて安い。</p>
         </div>
         <div style="background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%); padding: 24px 28px; border-radius: 10px; border-left: 5px solid var(--nsk-navy);">
           <h3 style="color: var(--nsk-navy); margin-top: 0;">/effort low</h3>
-          <p style="font-size: 16pt; line-height: 1.7; color: #333;">深い推論が不要な作業に。レスポンス速度が上がり、コストも削減できる。</p>
+          <p style="font-size: 19pt; line-height: 1.7; color: #333;">深い推論が不要な作業に。速度UP・コスト削減。</p>
         </div>
       </div>
     </div>
@@ -235,7 +231,7 @@ Python 3.12 / FastAPI / PostgreSQL のバックエンドAPI。
   <section>
     <h2>LLMにやらせるな — スクリプト化と冪等性</h2>
     <div class="content">
-      <p style="font-size: 16pt; color: #555; margin-bottom: 16px;"><strong>原則: 決定的な処理はスクリプトに書け。</strong> LLMは確率的に動く。掛け算ですら間違える可能性がある。</p>
+      <p style="font-size: 20pt; color: #555; margin-bottom: 16px;"><strong>原則: 決定的な処理はスクリプトに書け。</strong> LLMは確率的。掛け算すら間違える。</p>
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px;">
         <div>
           <h3 style="color: #e74c3c;">悪い例</h3>
@@ -243,7 +239,7 @@ Python 3.12 / FastAPI / PostgreSQL のバックエンドAPI。
 → LLMが自力で計算する
 → 間違える可能性あり</code></pre>
           <div style="background: #FFEBEE; padding: 14px 18px; border-radius: 6px; border-left: 4px solid #e74c3c; margin-top: 12px;">
-            <p style="font-size: 15pt; margin: 0; color: #333;">LLMは確率的に動く。<br>同じ入力でも毎回同じ結果とは限らない。</p>
+            <p style="font-size: 18pt; margin: 0; color: #333;">同じ入力でも毎回同じ結果とは限らない。</p>
           </div>
         </div>
         <div>
@@ -255,7 +251,7 @@ Python 3.12 / FastAPI / PostgreSQL のバックエンドAPI。
 → スクリプトが確定的に計算する
 → 再実行も可能</code></pre>
           <div style="background: #E8F5E9; padding: 14px 18px; border-radius: 6px; border-left: 4px solid #27ae60; margin-top: 12px;">
-            <p style="font-size: 15pt; margin: 0; color: #333;">スクリプトは冪等。<br>何度実行しても同じ結果が返る。</p>
+            <p style="font-size: 18pt; margin: 0; color: #333;">スクリプトは冪等。何度実行しても同じ結果。</p>
           </div>
         </div>
       </div>
@@ -297,9 +293,8 @@ Python 3.12 / FastAPI / PostgreSQL のバックエンドAPI。
         </div>
       </div>
       <div style="background: #FFF3CD; padding: 16px 22px; border-radius: 8px; border-left: 4px solid #F59E0B; margin-top: 20px;">
-        <p style="font-size: 16pt; line-height: 1.6; margin: 0; color: #333;">
-          <strong>CLAUDE.mdの「お願い」</strong> vs <strong>hooksの「強制」</strong> — 確定的なゲートを作るにはhooksを使う。<br>
-          Claudeがファイルを編集するたびに自動でリンターと型チェッカーが走る。
+        <p style="font-size: 19pt; line-height: 1.6; margin: 0; color: #333;">
+          <strong>CLAUDE.mdの「お願い」</strong> vs <strong>hooksの「強制」</strong> — 確実なゲートにはhooksを使う。
         </p>
       </div>
     </div>
@@ -309,25 +304,24 @@ Python 3.12 / FastAPI / PostgreSQL のバックエンドAPI。
   <section>
     <h2>mypyのもう一つの価値 — 型はLLMにとってのドキュメント</h2>
     <div class="content">
-      <p style="font-size: 16pt; color: #555; margin-bottom: 16px;">
-        型アノテーションの付いたコードは、LLMにとって<strong>コードとドキュメントが一体化したモノリシックな資料</strong>になる。
+      <p style="font-size: 20pt; color: #555; margin-bottom: 16px;">
+        型アノテーション付きコード＝LLMにとっての<strong>コード兼ドキュメント</strong>。
       </p>
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 28px;">
         <div>
-          <h3 style="color: #e74c3c;">NG: 型なし — LLMは使い方を推測するしかない</h3>
+          <h3 style="color: #e74c3c;">NG: 型なし — LLMは推測するしかない</h3>
           <pre><code class="language-python">def calculate_discount(price, user, campaign):
     if campaign and user.is_premium:
         return price * campaign.rate
     return price</code></pre>
           <div style="background: #FFEBEE; padding: 12px 16px; border-radius: 6px; margin-top: 10px;">
-            <p style="font-size: 14pt; margin: 0; color: #333;">
-              <code>price</code>はintかfloatか？<code>campaign</code>はNoneが来うるか？<br>
-              LLMは推測するしかない。推測は確率的であり、間違える。
+            <p style="font-size: 17pt; margin: 0; color: #333;">
+              <code>price</code>はint？float？推測は確率的で間違える。
             </p>
           </div>
         </div>
         <div>
-          <h3 style="color: #27ae60;">OK: 型あり — 関数シグネチャ自体がドキュメント</h3>
+          <h3 style="color: #27ae60;">OK: 型あり — シグネチャがドキュメント</h3>
           <pre><code class="language-python">from decimal import Decimal
 
 def calculate_discount(
@@ -339,9 +333,8 @@ def calculate_discount(
         return price * campaign.rate
     return price</code></pre>
           <div style="background: #E8F5E9; padding: 12px 16px; border-radius: 6px; margin-top: 10px;">
-            <p style="font-size: 14pt; margin: 0; color: #333;">
-              <code>price</code>はDecimal・<code>campaign</code>はNone許容・戻り値はDecimal。<br>
-              型は実行時（mypy）に検証されるため、常に正確なドキュメントになる。
+            <p style="font-size: 17pt; margin: 0; color: #333;">
+              型はmypyで検証される。常に正確なドキュメント。
             </p>
           </div>
         </div>
@@ -353,20 +346,20 @@ def calculate_discount(
   <section>
     <h2>サブエージェントへの委譲 — コンテキストを守る</h2>
     <div class="content">
-      <p style="font-size: 16pt; color: #555; margin-bottom: 20px;">ファイル探索やコード分析はコンテキストを大量に消費する。メインセッションでそれをやると、肝心の作業時にコンテキストが汚染される。</p>
+      <p style="font-size: 20pt; color: #555; margin-bottom: 20px;">探索・分析はコンテキストを大量消費する。メインを汚さずサブエージェントに委譲。</p>
       <h3>組み込みサブエージェント</h3>
       <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 24px;">
         <div style="background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%); padding: 20px; border-radius: 8px; border-left: 4px solid var(--nsk-red);">
-          <h3 style="margin-top: 0; font-size: 17pt;">Explore</h3>
-          <p style="font-size: 15pt; line-height: 1.6; color: #444;">読み取り専用のコードベース探索。ファイル構造やコード検索を、メインコンテキストを汚さず実行する。</p>
+          <h3 style="margin-top: 0; font-size: 20pt;">Explore</h3>
+          <p style="font-size: 18pt; line-height: 1.6; color: #444;">読み取り専用のコードベース探索。</p>
         </div>
         <div style="background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%); padding: 20px; border-radius: 8px; border-left: 4px solid var(--nsk-red);">
-          <h3 style="margin-top: 0; font-size: 17pt;">Plan</h3>
-          <p style="font-size: 15pt; line-height: 1.6; color: #444;">計画モード時にコードベースを調査し、計画を立てる。実装前の設計フェーズで活用する。</p>
+          <h3 style="margin-top: 0; font-size: 20pt;">Plan</h3>
+          <p style="font-size: 18pt; line-height: 1.6; color: #444;">実装前の設計・計画立案。</p>
         </div>
         <div style="background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%); padding: 20px; border-radius: 8px; border-left: 4px solid var(--nsk-red);">
-          <h3 style="margin-top: 0; font-size: 17pt;">汎用サブエージェント</h3>
-          <p style="font-size: 15pt; line-height: 1.6; color: #444;">探索と変更の両方が必要な複雑なタスク用。メインには結果だけが返る。</p>
+          <h3 style="margin-top: 0; font-size: 20pt;">汎用サブエージェント</h3>
+          <p style="font-size: 18pt; line-height: 1.6; color: #444;">探索＋変更の複合タスク用。結果だけ返る。</p>
         </div>
       </div>
       <pre><code class="language-text">「Exploreサブエージェントを使って、認証関連のファイルを全部洗い出して」
@@ -378,7 +371,7 @@ def calculate_discount(
   <section>
     <h2>カスタムサブエージェントの作り方</h2>
     <div class="content">
-      <p style="font-size: 16pt; color: #555; margin-bottom: 16px;"><code>.claude/agents/</code> にMarkdownファイルを置く:</p>
+      <p style="font-size: 20pt; color: #555; margin-bottom: 16px;"><code>.claude/agents/</code> にMarkdownを配置:</p>
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: start;">
         <div>
           <pre><code class="language-markdown">&lt;!-- .claude/agents/code-reviewer.md --&gt;
@@ -406,11 +399,11 @@ model: sonnet
         </div>
         <div>
           <h3>ポイント</h3>
-          <ul style="font-size: 16pt; line-height: 2.0;">
-            <li><code>tools</code> で使えるツールを制限する<br>（レビュアーに書き込み権限は不要）</li>
-            <li><code>model</code> でコストを制御する<br>（レビューならsonnetで十分なことが多い）</li>
-            <li>サブエージェントは<strong>ネストできない</strong>（1階層のみ）</li>
-            <li>サブエージェントの結果だけがメインに返るので、<strong>コンテキストが節約</strong>される</li>
+          <ul style="font-size: 19pt; line-height: 2.0;">
+            <li><code>tools</code> でツールを制限（最小権限）</li>
+            <li><code>model</code> でコスト制御（sonnetで十分なことも）</li>
+            <li>ネスト不可（1階層のみ）</li>
+            <li>結果だけ返る → <strong>コンテキスト節約</strong></li>
           </ul>
         </div>
       </div>
@@ -421,7 +414,7 @@ model: sonnet
   <section>
     <h2>いつ委譲するか</h2>
     <div class="content" style="margin-top: 12px;">
-      <table style="font-size: 17pt; width: 100%; border-collapse: collapse;">
+      <table style="font-size: 20pt; width: 100%; border-collapse: collapse;">
         <thead>
           <tr style="background: var(--nsk-navy); color: white;">
             <th style="padding: 14px 20px; text-align: left; width: 55%;">状況</th>
@@ -459,10 +452,9 @@ model: sonnet
     <h2>Skills — 段階的開示の中核</h2>
     <div class="content">
       <div style="background: #FFF8E1; padding: 16px 22px; border-radius: 8px; border-left: 5px solid #F59E0B; margin-bottom: 20px;">
-        <p style="font-size: 16pt; margin: 0; line-height: 1.7; color: #333;">
-          <strong>CLAUDE.md</strong>は毎回読み込まれる。<strong>Skills</strong>は必要なときだけ読み込まれる。<br>
-          「常に必要な情報 → CLAUDE.md」「特定タスクで必要な情報 → Skill」と使い分けることで、<br>
-          コンテキストを目的に応じて動的に制御できる。これが<strong>段階的開示</strong>の実装だ。
+        <p style="font-size: 19pt; margin: 0; line-height: 1.7; color: #333;">
+          <strong>CLAUDE.md</strong>＝毎回読み込み。<strong>Skills</strong>＝必要時のみ読み込み。<br>
+          この使い分けが<strong>段階的開示</strong>の実装。
         </p>
       </div>
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: start;">
@@ -483,13 +475,13 @@ description: 本番環境へのデプロイ手順
         </div>
         <div>
           <h3>skillの設計方針</h3>
-          <ul style="font-size: 16pt; line-height: 1.9;">
-            <li>skillの中にスクリプトやテンプレートを<strong>同梱</strong>できる（<code>.claude/skills/deploy/scripts/</code> など）</li>
-            <li>Claudeにボイラープレートを「生成」させず、同梱ファイルを「使わせる」ことで<strong>再現性</strong>を上げる</li>
-            <li>skillの作り方がわからなければ、Claudeに聞く:<br><code>「デプロイ用のskillを作りたい」</code></li>
+          <ul style="font-size: 19pt; line-height: 1.9;">
+            <li>スクリプトやテンプレートを<strong>同梱</strong>可能</li>
+            <li>「生成」でなく同梱ファイルを「使わせる」→ <strong>再現性UP</strong></li>
+            <li>作り方はClaudeに聞ける: <code>「deploy用skillを作りたい」</code></li>
           </ul>
           <div style="background: #E8F5E9; padding: 14px 18px; border-radius: 6px; border-left: 4px solid #27ae60; margin-top: 16px;">
-            <p style="font-size: 15pt; margin: 0; color: #333;"><strong>CLAUDE.md vs Skill:</strong><br>常駐する知識 → CLAUDE.md<br>タスク固有の知識 → Skill</p>
+            <p style="font-size: 18pt; margin: 0; color: #333;"><strong>常駐知識 → CLAUDE.md ／ タスク固有 → Skill</strong></p>
           </div>
         </div>
       </div>
@@ -531,18 +523,18 @@ description: 本番環境へのデプロイ手順
         </div>
         <div>
           <h3>設定の方針</h3>
-          <ul style="font-size: 16pt; line-height: 2.0;">
-            <li><code>permissions.allow</code> で頻出コマンドの毎回承認を省略する</li>
-            <li>hooksでリンター・フォーマッターを自動実行する</li>
-            <li>CLAUDE.mdの「お願い」よりhooksの「強制」を優先する（確定的 &gt; 確率的）</li>
-            <li><code>.claude/settings.json</code> はgitにcommitしてチームで共有する</li>
+          <ul style="font-size: 19pt; line-height: 2.0;">
+            <li><code>permissions.allow</code> で毎回の承認を省略</li>
+            <li>hooksでリンター・型チェックを自動実行</li>
+            <li>「お願い」より「強制」（確定的 &gt; 確率的）</li>
+            <li>gitにcommitしてチーム共有</li>
           </ul>
           <h3>/init で始める</h3>
           <pre><code class="language-bash">cd your-project
 claude
 # セッション内で
 /init</code></pre>
-          <p style="font-size: 15pt; color: #555; line-height: 1.6;"><code>/init</code> はプロジェクト構造を分析してCLAUDE.mdの雛形を生成する。ここから不要な記述を削って洗練させていく。</p>
+          <p style="font-size: 18pt; color: #555; line-height: 1.6;"><code>/init</code> でCLAUDE.mdの雛形を自動生成。不要な記述を削って洗練させる。</p>
         </div>
       </div>
     </div>
@@ -552,7 +544,7 @@ claude
   <section>
     <h2>カスタムコマンド — 繰り返し作業のパッケージ化</h2>
     <div class="content">
-      <p style="font-size: 16pt; color: #555; margin-bottom: 16px;"><code>.claude/commands/</code> にMarkdownファイルを置くと、スラッシュコマンドとして使える。</p>
+      <p style="font-size: 20pt; color: #555; margin-bottom: 16px;"><code>.claude/commands/</code> にMarkdownを置く → スラッシュコマンドになる。</p>
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: start;">
         <div>
           <pre><code class="language-markdown">&lt;!-- .claude/commands/review-pr.md --&gt;
@@ -574,13 +566,13 @@ git diffの結果をレビューしてください。
         <div>
           <h3>使い方</h3>
           <pre><code class="language-text">/review-pr feature/user-auth</code></pre>
-          <ul style="font-size: 16pt; line-height: 1.9; margin-top: 16px;">
-            <li><code>$ARGUMENTS</code> にコマンドの引数が入る</li>
-            <li><strong>チームで共有</strong>するコマンドはプロジェクトの <code>.claude/commands/</code> に配置</li>
-            <li><strong>個人用</strong>は <code>~/.claude/commands/</code> に配置</li>
+          <ul style="font-size: 19pt; line-height: 1.9; margin-top: 16px;">
+            <li><code>$ARGUMENTS</code> に引数が入る</li>
+            <li>チーム共有: <code>.claude/commands/</code></li>
+            <li>個人用: <code>~/.claude/commands/</code></li>
           </ul>
           <div style="background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%); padding: 16px 20px; border-radius: 8px; border-left: 4px solid var(--nsk-navy); margin-top: 16px;">
-            <p style="font-size: 15pt; margin: 0; color: #333;">繰り返し使う作業手順をコマンド化することで、<br>チーム全員が同じ品質でタスクを実行できる。</p>
+            <p style="font-size: 18pt; margin: 0; color: #333;">コマンド化でチーム全員が同じ品質でタスクを実行。</p>
           </div>
         </div>
       </div>
@@ -624,9 +616,8 @@ cat error.log | claude -p "このエラーの原因を特定して"
 # 非対話で実行
 claude -p "tests/ 以下のテストを全部実行して結果を報告して"</code></pre>
           <div style="background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%); padding: 20px 24px; border-radius: 8px; border-left: 5px solid var(--nsk-navy); margin-top: 24px;">
-            <p style="font-size: 16pt; line-height: 1.7; margin: 0; color: #333;">
-              <strong>-p フラグ:</strong> プロンプトを直接渡して非対話で実行。<br>
-              シェルスクリプトや CI/CD パイプラインへの組み込みに便利。
+            <p style="font-size: 19pt; line-height: 1.7; margin: 0; color: #333;">
+              <strong>-p フラグ:</strong> 非対話実行。CI/CDへの組み込みに便利。
             </p>
           </div>
         </div>
@@ -640,22 +631,22 @@ claude -p "tests/ 以下のテストを全部実行して結果を報告して"<
     <div class="content">
       <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; margin-bottom: 28px;">
         <div style="background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%); padding: 24px 26px; border-radius: 10px; border-left: 6px solid var(--nsk-red);">
-          <h3 style="margin-top: 0; font-size: 18pt; color: var(--nsk-red);">① セッションを使い捨てろ</h3>
-          <p style="font-size: 15pt; line-height: 1.7; color: #333;">相談したら結論をファイルに書き出して、新しいセッションで実装に入る。</p>
+          <h3 style="margin-top: 0; font-size: 21pt; color: var(--nsk-red);">① セッションを使い捨てろ</h3>
+          <p style="font-size: 18pt; line-height: 1.7; color: #333;">結論をファイルに書き出し、新セッションで実装。</p>
         </div>
         <div style="background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%); padding: 24px 26px; border-radius: 10px; border-left: 6px solid var(--nsk-red);">
-          <h3 style="margin-top: 0; font-size: 18pt; color: var(--nsk-red);">② ツールに任せろ</h3>
-          <p style="font-size: 15pt; line-height: 1.7; color: #333;">品質管理はhooksで自動化、計算はスクリプトで。LLMは「使う側」。</p>
+          <h3 style="margin-top: 0; font-size: 21pt; color: var(--nsk-red);">② ツールに任せろ</h3>
+          <p style="font-size: 18pt; line-height: 1.7; color: #333;">hooksで自動化、計算はスクリプトで。</p>
         </div>
         <div style="background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%); padding: 24px 26px; border-radius: 10px; border-left: 6px solid var(--nsk-red);">
-          <h3 style="margin-top: 0; font-size: 18pt; color: var(--nsk-red);">③ コンテキストを守れ</h3>
-          <p style="font-size: 15pt; line-height: 1.7; color: #333;">探索や分析はサブエージェントに委譲し、メインには結果だけ返させる。タスク固有の知識は<strong>Skills</strong>で必要なときだけ読み込む。</p>
+          <h3 style="margin-top: 0; font-size: 21pt; color: var(--nsk-red);">③ コンテキストを守れ</h3>
+          <p style="font-size: 18pt; line-height: 1.7; color: #333;">サブエージェントに委譲。Skillsで動的読み込み。</p>
         </div>
       </div>
       <div style="background: #FFF8E1; padding: 20px 28px; border-radius: 8px; border-left: 5px solid #F59E0B;">
-        <p style="font-size: 16pt; line-height: 1.8; margin: 0; color: #333;">
-          これらを意識するだけで、Claude Codeの効果は大きく変わる。<br>
-          慣れてきたら、カスタムコマンド、agent teams、git worktreeなど、さらに高度な機能に進んでいこう。
+        <p style="font-size: 20pt; line-height: 1.8; margin: 0; color: #333;">
+          この3つでClaude Codeの効果は大きく変わる。<br>
+          慣れたらカスタムコマンド、agent teams、git worktreeへ。
         </p>
       </div>
     </div>
