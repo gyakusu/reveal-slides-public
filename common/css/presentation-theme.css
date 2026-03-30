@@ -260,19 +260,10 @@
     background-color: var(--nsk-navy);
     border-top: 3px solid var(--nsk-red);
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
     padding: 0 3vw;
     z-index: 999;
-}
-
-.reveal-footer .copyright {
-    font-size: 1.3vh;
-    color: rgba(255, 255, 255, 0.72);
-    font-family: "Noto Sans JP", sans-serif;
-    font-weight: 400;
-    letter-spacing: 0.05em;
-    white-space: nowrap;
 }
 
 .reveal-footer .page-number {
