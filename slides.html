@@ -1,623 +1,234 @@
 <div class="slides">
-
   <!-- スライド 1: タイトル -->
-  <section class="section-divider" style="display: flex; flex-direction: column; justify-content: center; height: 100%;">
-    <h1>Claude Code<br>スタートダッシュガイド</h1>
-    <p style="font-size: 22pt; color: var(--nsk-navy); margin-top: 16px;">
-      対象: Python経験のある新入社員 ／ 前提: Claude Code知識ゼロ
+  <section
+    class="section-divider"
+    style="
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      height: 100%;
+    "
+  >
+    <h1>Claude Codeの<br />セキュリティフレームワーク</h1>
+    <p style="font-size: 22pt; color: var(--nsk-navy); margin-top: 16px">
+      ローカルUbuntu環境におけるセキュアな導入と運用
     </p>
   </section>
 
-  <!-- スライド 2: このガイドの思想 -->
+  <!-- スライド 2: 問題の全体像 -->
   <section>
-    <h2>このガイドの思想</h2>
+    <h2>なぜセキュリティが重要か — AIエージェントの二面性</h2>
     <div class="content">
-      <p style="font-size: 20pt; color: #555; margin-bottom: 20px;">道具の性質を理解しないと効果が出ない。核となる考え方は3つ。</p>
-      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 24px;">
-        <div style="background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%); padding: 20px 24px; border-radius: 10px; border-left: 5px solid var(--nsk-red);">
-          <h3 style="margin-top: 0; font-size: 21pt;">① セッションを使い捨てろ</h3>
-          <p style="font-size: 18pt; line-height: 1.6; color: #444;">コンテキストは有限。結論をファイルに書き出し、新セッションで次へ進む。</p>
+      <p style="font-size: 20pt; color: #555; margin-bottom: 20px">
+        AIエージェントは高い生産性をもたらすが、新たなリスクベクターも導入する。
+      </p>
+      <div
+        style="
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr;
+          gap: 20px;
+          margin-bottom: 24px;
+        "
+      >
+        <div
+          style="
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%);
+            padding: 20px 24px;
+            border-radius: 10px;
+            border-left: 5px solid var(--nsk-red);
+          "
+        >
+          <h3 style="margin-top: 0; font-size: 21pt">① 広範なコンテキスト</h3>
+          <p style="font-size: 18pt; line-height: 1.6; color: #444">
+            高パフォーマンスにはAPIキー、環境変数、独自ロジックへのアクセスが必要。
+          </p>
         </div>
-        <div style="background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%); padding: 20px 24px; border-radius: 10px; border-left: 5px solid var(--nsk-red);">
-          <h3 style="margin-top: 0; font-size: 21pt;">② ツールに任せろ</h3>
-          <p style="font-size: 18pt; line-height: 1.6; color: #444;">LLMは確率的。決定的な処理はスクリプトやリンターに委ねる。</p>
+        <div
+          style="
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%);
+            padding: 20px 24px;
+            border-radius: 10px;
+            border-left: 5px solid var(--nsk-red);
+          "
+        >
+          <h3 style="margin-top: 0; font-size: 21pt">② ゼロトラストの姿勢</h3>
+          <p style="font-size: 18pt; line-height: 1.6; color: #444">
+            AIエージェントを「強力だが完全には信頼できないエンティティ」として扱う。
+          </p>
         </div>
-        <div style="background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%); padding: 20px 24px; border-radius: 10px; border-left: 5px solid var(--nsk-red);">
-          <h3 style="margin-top: 0; font-size: 21pt;">③ コンテキストを守れ</h3>
-          <p style="font-size: 18pt; line-height: 1.6; color: #444;">探索はサブエージェントに委譲。必要な知識は必要なときだけ読み込む。</p>
+        <div
+          style="
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%);
+            padding: 20px 24px;
+            border-radius: 10px;
+            border-left: 5px solid var(--nsk-red);
+          "
+        >
+          <h3 style="margin-top: 0; font-size: 21pt">③ 多層防御が不可欠</h3>
+          <p style="font-size: 18pt; line-height: 1.6; color: #444">
+            シークレット拡散、シェル履歴、プロンプトインジェクション等の多層的リスクに対応。
+          </p>
         </div>
       </div>
-      <div style="background: #FFF8E1; padding: 20px 28px; border-radius: 8px; border-left: 5px solid #F59E0B;">
-        <p style="font-size: 19pt; line-height: 1.7; margin: 0; color: #333;">
-          「必要なときだけ読み込む」＝<strong>段階的開示</strong>。<br>
-          常駐知識はCLAUDE.md、タスク固有の知識は <strong>Skills</strong> で動的にロードする。
+      <div
+        style="
+          background: #fff8e1;
+          padding: 20px 28px;
+          border-radius: 8px;
+          border-left: 5px solid #f59e0b;
+        "
+      >
+        <p style="font-size: 19pt; line-height: 1.7; margin: 0; color: #333">
+          2025年だけで<strong>2,800万件以上</strong>のハードコードされたシークレットが公開リポジトリに追加（前年比34%増）。<br />
+          漏洩したAWSキーは<strong>数分以内</strong>に自動クローラーでテストされる。
         </p>
       </div>
     </div>
   </section>
 
-  <!-- スライド 3: インストールと最初の起動 -->
+  <!-- スライド 3: 脅威カテゴリ一覧 -->
   <section>
-    <h2>インストールと最初の起動</h2>
-    <div class="content">
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start;">
-        <div>
-          <h3>インストール</h3>
-          <pre><code class="language-bash"># インストール（Node.js 18以上が必要）
-npm install -g @anthropic-ai/claude-code
-
-# プロジェクトのルートに移動して起動
-cd your-project
-claude</code></pre>
-          <p style="font-size: 19pt; color: #555; margin-top: 16px;">初回起動時にログインするだけで準備完了。</p>
-        </div>
-        <div>
-          <h3>確認コマンド</h3>
-          <pre><code class="language-bash">claude --version    # バージョン確認
-claude --help       # ヘルプ表示</code></pre>
-          <div style="background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%); padding: 20px 24px; border-radius: 8px; border-left: 5px solid var(--nsk-red); margin-top: 24px;">
-            <p style="font-size: 19pt; line-height: 1.7; margin: 0; color: #333;">
-              <strong>前提:</strong> Node.js 18以上<br>
-              <strong>起動:</strong> プロジェクトルートで <code>claude</code><br>
-              <strong>終了:</strong> <code>/exit</code> または Ctrl+C
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- スライド 4: CLAUDE.md 概要 -->
-  <section>
-    <h2>CLAUDE.md — プロジェクトの「取扱説明書」</h2>
-    <div class="content">
-      <p style="font-size: 19pt; color: #555; margin-bottom: 20px;">
-        セッション開始時に毎回読まれるMarkdown。LLM向けのプロジェクトREADME。
-      </p>
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px;">
-        <div>
-          <h3 style="color: #27ae60;">書くべきこと</h3>
-          <ul style="font-size: 19pt; line-height: 1.9;">
-            <li>ビルド・テスト・リントのコマンド</li>
-            <li>プロジェクト構造の概要</li>
-            <li>ツールで強制できない設計方針</li>
-            <li>「やってはいけないこと」</li>
-          </ul>
-        </div>
-        <div>
-          <h3 style="color: #e74c3c;">書いてはいけないこと</h3>
-          <ul style="font-size: 19pt; line-height: 1.9;">
-            <li>ツールで強制できるルール（prettier、mypy等）</li>
-            <li>コードのコピペ（パスで参照せよ）</li>
-            <li>詰め込みすぎ（多いと無視される）</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- スライド 5: CLAUDE.md 良い例 -->
-  <section>
-    <h2>CLAUDE.md — 良い例</h2>
-    <div class="content">
-      <pre><code class="language-markdown"># Project Overview
-Python 3.12 / FastAPI / PostgreSQL のバックエンドAPI。
-
-# Commands
-- テスト: pytest tests/ -x --tb=short
-- 型チェック: mypy src/ --strict
-- リント: ruff check src/
-- 単一テスト: pytest tests/test_xxx.py::test_name -v
-
-# Architecture
-- src/api/ — ルーティング
-- src/domain/ — ビジネスロジック（外部依存なし）
-- src/infra/ — DB・外部API
-
-# Rules
-- domain層はinfra層をimportしてはならない
-- 新しいエンドポイントには必ず対応するテストを書く
-- エラーハンドリングはsrc/api/errors.pyのパターンに従う</code></pre>
-    </div>
-  </section>
-
-  <!-- スライド 6: CLAUDE.md 原則と配置 -->
-  <section>
-    <h2>CLAUDE.md — 重要な原則と配置場所</h2>
-    <div class="content">
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 36px; align-items: start;">
-        <div>
-          <h3>重要な原則</h3>
-          <ul style="font-size: 19pt; line-height: 2.0;">
-            <li><strong>短く保て。</strong> 消してもClaudeが間違えないなら消す。</li>
-            <li><strong>ポインタを使え。</strong> コピペでなく <code>src/api/errors.py を参照</code> と書く。</li>
-            <li><strong>@構文で参照。</strong> <code>@README.md</code> で外部ファイルを読み込める。</li>
-            <li><strong>定期的に手入れ。</strong> 指示無視が増えたら肥大化のサイン。</li>
-          </ul>
-        </div>
-        <div>
-          <h3>配置場所の使い分け</h3>
-          <table style="font-size: 15pt; width: 100%; border-collapse: collapse;">
-            <thead>
-              <tr style="background: var(--nsk-navy); color: white;">
-                <th style="padding: 10px 14px; text-align: left; border-radius: 4px 0 0 0;">場所</th>
-                <th style="padding: 10px 14px; text-align: left; border-radius: 0 4px 0 0;">用途</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr style="background: #f5f7fa;">
-                <td style="padding: 10px 14px; border-bottom: 1px solid #ddd;"><code>~/.claude/CLAUDE.md</code></td>
-                <td style="padding: 10px 14px; border-bottom: 1px solid #ddd;">全プロジェクト共通の個人設定</td>
-              </tr>
-              <tr>
-                <td style="padding: 10px 14px; border-bottom: 1px solid #ddd;"><code>./CLAUDE.md</code></td>
-                <td style="padding: 10px 14px; border-bottom: 1px solid #ddd;">プロジェクト固有（gitにcommitしてチームで共有）</td>
-              </tr>
-              <tr style="background: #f5f7fa;">
-                <td style="padding: 10px 14px;"><code>./子ディレクトリ/CLAUDE.md</code></td>
-                <td style="padding: 10px 14px;">サブモジュール固有（必要時のみ読み込まれる）</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- スライド 7: セッションの使い捨て -->
-  <section>
-    <h2>基本ワークフロー — セッションの使い捨て</h2>
-    <div class="content">
-      <p style="font-size: 20pt; color: #333; margin-bottom: 20px;">最も大事な習慣: <strong>1タスク1セッション</strong>。コンテキストが積むほど品質は落ちる。</p>
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start;">
-        <div>
-          <h3>推奨フロー</h3>
-          <pre><code class="language-text">[セッション1: 相談]
-  「このAPIの設計方針を相談したい」
-  → 議論の結論をファイルに書き出させる
-  → セッション終了
-
-[セッション2: 実装]
-  「docs/plan.md に書かれた方針に従って
-   APIを実装して」
-  → 新鮮なコンテキストで実装に集中
-  → セッション終了</code></pre>
-        </div>
-        <div>
-          <h3>ストレージへの逃がし方</h3>
-          <pre><code class="language-text"># セッション内でClaudeに指示する例
-「今の議論の結論を
- docs/design-decision-auth.mdに書き出して」
-
-「実装計画を
- docs/plan-user-api.mdにまとめて」</code></pre>
-          <div style="background: #E8F5E9; padding: 16px 20px; border-radius: 8px; border-left: 4px solid #27ae60; margin-top: 16px;">
-            <p style="font-size: 18pt; line-height: 1.6; margin: 0; color: #333;">
-              次のセッションではファイルを読むだけ。<br>
-              コンテキストには<strong>結論だけ</strong>が入る。
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- スライド 8: コンテキスト管理 -->
-  <section>
-    <h2>コンテキスト管理の小技</h2>
-    <div class="content">
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 8px;">
-        <div style="background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%); padding: 24px 28px; border-radius: 10px; border-left: 5px solid var(--nsk-navy);">
-          <h3 style="color: var(--nsk-navy); margin-top: 0;">/compact</h3>
-          <p style="font-size: 19pt; line-height: 1.7; color: #333;">コンテキストを要約・圧縮する。</p>
-        </div>
-        <div style="background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%); padding: 24px 28px; border-radius: 10px; border-left: 5px solid var(--nsk-navy);">
-          <h3 style="color: var(--nsk-navy); margin-top: 0;">/clear</h3>
-          <p style="font-size: 19pt; line-height: 1.7; color: #333;">タスク切り替え時にコンテキストをリセット。</p>
-        </div>
-        <div style="background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%); padding: 24px 28px; border-radius: 10px; border-left: 5px solid var(--nsk-navy);">
-          <h3 style="color: var(--nsk-navy); margin-top: 0;">/model haiku</h3>
-          <p style="font-size: 19pt; line-height: 1.7; color: #333;">機械的な作業はHaikuで十分。速くて安い。</p>
-        </div>
-        <div style="background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%); padding: 24px 28px; border-radius: 10px; border-left: 5px solid var(--nsk-navy);">
-          <h3 style="color: var(--nsk-navy); margin-top: 0;">/effort low</h3>
-          <p style="font-size: 19pt; line-height: 1.7; color: #333;">深い推論が不要な作業に。速度UP・コスト削減。</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- スライド 9: スクリプト化と冪等性 -->
-  <section>
-    <h2>LLMにやらせるな — スクリプト化と冪等性</h2>
-    <div class="content">
-      <p style="font-size: 20pt; color: #555; margin-bottom: 16px;"><strong>原則: 決定的な処理はスクリプトに書け。</strong> LLMは確率的。掛け算すら間違える。</p>
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px;">
-        <div>
-          <h3 style="color: #e74c3c;">悪い例</h3>
-          <pre><code class="language-text">「このCSVの売上列を合計して」
-→ LLMが自力で計算する
-→ 間違える可能性あり</code></pre>
-          <div style="background: #FFEBEE; padding: 14px 18px; border-radius: 6px; border-left: 4px solid #e74c3c; margin-top: 12px;">
-            <p style="font-size: 18pt; margin: 0; color: #333;">同じ入力でも毎回同じ結果とは限らない。</p>
-          </div>
-        </div>
-        <div>
-          <h3 style="color: #27ae60;">良い例</h3>
-          <pre><code class="language-text">「このCSVの売上列を合計するPython
- スクリプトを書いて、
- scripts/sum_sales.py に保存して、
- 実行して」
-→ スクリプトが確定的に計算する
-→ 再実行も可能</code></pre>
-          <div style="background: #E8F5E9; padding: 14px 18px; border-radius: 6px; border-left: 4px solid #27ae60; margin-top: 12px;">
-            <p style="font-size: 18pt; margin: 0; color: #333;">スクリプトは冪等。何度実行しても同じ結果。</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- スライド 10: 品質管理のツール化 -->
-  <section>
-    <h2>品質管理もツールに委ねる</h2>
-    <div class="content">
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start;">
-        <div>
-          <h3>CLAUDE.mdに書いておくと効果的</h3>
-          <pre><code class="language-markdown">- コード変更後は必ず
-  `ruff check src/` と
-  `mypy src/ --strict` を実行する
-- テストは `pytest tests/ -x` で確認する
-- これらが通らない状態で
-  タスク完了とみなさない</code></pre>
-        </div>
-        <div>
-          <h3>さらに確実に — hooksで強制する</h3>
-          <pre><code class="language-json">// .claude/settings.json
-{
-  "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "ruff check src/ && mypy src/ --strict"
-          }
-        ]
-      }
-    ]
-  }
-}</code></pre>
-        </div>
-      </div>
-      <div style="background: #FFF3CD; padding: 16px 22px; border-radius: 8px; border-left: 4px solid #F59E0B; margin-top: 20px;">
-        <p style="font-size: 19pt; line-height: 1.6; margin: 0; color: #333;">
-          <strong>CLAUDE.mdの「お願い」</strong> vs <strong>hooksの「強制」</strong> — 確実なゲートにはhooksを使う。
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- スライド 10b: mypyのもう一つの価値 -->
-  <section>
-    <h2>mypyのもう一つの価値 — 型はLLMにとってのドキュメント</h2>
-    <div class="content">
-      <p style="font-size: 20pt; color: #555; margin-bottom: 16px;">
-        型アノテーション付きコード＝LLMにとっての<strong>コード兼ドキュメント</strong>。
-      </p>
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 28px;">
-        <div>
-          <h3 style="color: #e74c3c;">NG: 型なし — LLMは推測するしかない</h3>
-          <pre><code class="language-python">def calculate_discount(price, user, campaign):
-    if campaign and user.is_premium:
-        return price * campaign.rate
-    return price</code></pre>
-          <div style="background: #FFEBEE; padding: 12px 16px; border-radius: 6px; margin-top: 10px;">
-            <p style="font-size: 17pt; margin: 0; color: #333;">
-              <code>price</code>はint？float？推測は確率的で間違える。
-            </p>
-          </div>
-        </div>
-        <div>
-          <h3 style="color: #27ae60;">OK: 型あり — シグネチャがドキュメント</h3>
-          <pre><code class="language-python">from decimal import Decimal
-
-def calculate_discount(
-    price: Decimal,
-    user: PremiumUser | StandardUser,
-    campaign: DiscountCampaign | None,
-) -> Decimal:
-    if campaign is not None and isinstance(user, PremiumUser):
-        return price * campaign.rate
-    return price</code></pre>
-          <div style="background: #E8F5E9; padding: 12px 16px; border-radius: 6px; margin-top: 10px;">
-            <p style="font-size: 17pt; margin: 0; color: #333;">
-              型はmypyで検証される。常に正確なドキュメント。
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- スライド 11: サブエージェント概要 -->
-  <section>
-    <h2>サブエージェントへの委譲 — コンテキストを守る</h2>
-    <div class="content">
-      <p style="font-size: 20pt; color: #555; margin-bottom: 20px;">探索・分析はコンテキストを大量消費する。メインを汚さずサブエージェントに委譲。</p>
-      <h3>組み込みサブエージェント</h3>
-      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 24px;">
-        <div style="background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%); padding: 20px; border-radius: 8px; border-left: 4px solid var(--nsk-red);">
-          <h3 style="margin-top: 0; font-size: 20pt;">Explore</h3>
-          <p style="font-size: 18pt; line-height: 1.6; color: #444;">読み取り専用のコードベース探索。</p>
-        </div>
-        <div style="background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%); padding: 20px; border-radius: 8px; border-left: 4px solid var(--nsk-red);">
-          <h3 style="margin-top: 0; font-size: 20pt;">Plan</h3>
-          <p style="font-size: 18pt; line-height: 1.6; color: #444;">実装前の設計・計画立案。</p>
-        </div>
-        <div style="background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%); padding: 20px; border-radius: 8px; border-left: 4px solid var(--nsk-red);">
-          <h3 style="margin-top: 0; font-size: 20pt;">汎用サブエージェント</h3>
-          <p style="font-size: 18pt; line-height: 1.6; color: #444;">探索＋変更の複合タスク用。結果だけ返る。</p>
-        </div>
-      </div>
-      <pre><code class="language-text">「Exploreサブエージェントを使って、認証関連のファイルを全部洗い出して」
-「この変更の影響範囲をサブエージェントに調べさせて、結果だけ教えて」</code></pre>
-    </div>
-  </section>
-
-  <!-- スライド 12: カスタムサブエージェント -->
-  <section>
-    <h2>カスタムサブエージェントの作り方</h2>
-    <div class="content">
-      <p style="font-size: 20pt; color: #555; margin-bottom: 16px;"><code>.claude/agents/</code> にMarkdownを配置:</p>
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: start;">
-        <div>
-          <pre><code class="language-markdown">&lt;!-- .claude/agents/code-reviewer.md --&gt;
----
-name: code-reviewer
-description: コード変更のレビュー。
-  差分を読んで問題点を報告する。
-tools:
-  - Read
-  - Grep
-  - Glob
-model: sonnet
----
-
-あなたはコードレビュアーです。
-与えられた差分を読み、以下の観点でレビュー:
-- バグの可能性
-- 設計原則への違反
-- テストの漏れ
-
-出力形式:
-- 問題の重要度（高/中/低）
-- ファイルパスと該当箇所
-- 具体的な修正提案</code></pre>
-        </div>
-        <div>
-          <h3>ポイント</h3>
-          <ul style="font-size: 19pt; line-height: 2.0;">
-            <li><code>tools</code> でツールを制限（最小権限）</li>
-            <li><code>model</code> でコスト制御（sonnetで十分なことも）</li>
-            <li>ネスト不可（1階層のみ）</li>
-            <li>結果だけ返る → <strong>コンテキスト節約</strong></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- スライド 13: 委譲の判断基準 -->
-  <section>
-    <h2>いつ委譲するか</h2>
-    <div class="content" style="margin-top: 12px;">
-      <table style="font-size: 20pt; width: 100%; border-collapse: collapse;">
+    <h2>脅威カテゴリの全体像</h2>
+    <div class="content" style="margin-top: 12px">
+      <table style="font-size: 18pt; width: 100%; border-collapse: collapse">
         <thead>
-          <tr style="background: var(--nsk-navy); color: white;">
-            <th style="padding: 14px 20px; text-align: left; width: 55%;">状況</th>
-            <th style="padding: 14px 20px; text-align: left;">やること</th>
+          <tr style="background: var(--nsk-navy); color: white">
+            <th style="padding: 14px 20px; text-align: left; width: 22%">
+              脅威カテゴリ
+            </th>
+            <th style="padding: 14px 20px; text-align: left; width: 40%">
+              露出のメカニズム
+            </th>
+            <th style="padding: 14px 20px; text-align: left">潜在的影響</th>
           </tr>
         </thead>
         <tbody>
-          <tr style="background: #f5f7fa;">
-            <td style="padding: 14px 20px; border-bottom: 1px solid #ddd;">「このプロジェクトの構造を把握したい」</td>
-            <td style="padding: 14px 20px; border-bottom: 1px solid #ddd; color: var(--nsk-red); font-weight: 600;">Exploreに委譲</td>
+          <tr style="background: #f5f7fa">
+            <td
+              style="
+                padding: 14px 20px;
+                border-bottom: 1px solid #ddd;
+                font-weight: 600;
+                color: var(--nsk-red);
+              "
+            >
+              シークレットの拡散
+            </td>
+            <td style="padding: 14px 20px; border-bottom: 1px solid #ddd">
+              .env、.json、YAML設定ファイルへのハードコード
+            </td>
+            <td style="padding: 14px 20px; border-bottom: 1px solid #ddd">
+              クラウドインフラ全体の侵害
+            </td>
           </tr>
           <tr>
-            <td style="padding: 14px 20px; border-bottom: 1px solid #ddd;">「この変更の影響範囲を調べたい」</td>
-            <td style="padding: 14px 20px; border-bottom: 1px solid #ddd; color: var(--nsk-red); font-weight: 600;">サブエージェントに委譲</td>
+            <td
+              style="
+                padding: 14px 20px;
+                border-bottom: 1px solid #ddd;
+                font-weight: 600;
+                color: var(--nsk-red);
+              "
+            >
+              シェル履歴の脆弱性
+            </td>
+            <td style="padding: 14px 20px; border-bottom: 1px solid #ddd">
+              コマンドライン引数として渡されたAPIキーのログ記録
+            </td>
+            <td style="padding: 14px 20px; border-bottom: 1px solid #ddd">
+              .bash_historyを通じた永続的な資格情報アクセス
+            </td>
           </tr>
-          <tr style="background: #f5f7fa;">
-            <td style="padding: 14px 20px; border-bottom: 1px solid #ddd;">「テスト結果を分析してほしい」</td>
-            <td style="padding: 14px 20px; border-bottom: 1px solid #ddd; color: var(--nsk-red); font-weight: 600;">サブエージェントに委譲</td>
+          <tr style="background: #f5f7fa">
+            <td
+              style="
+                padding: 14px 20px;
+                border-bottom: 1px solid #ddd;
+                font-weight: 600;
+                color: var(--nsk-red);
+              "
+            >
+              エージェントの越権行為
+            </td>
+            <td style="padding: 14px 20px; border-bottom: 1px solid #ddd">
+              サブエージェントによるローカル設定の拒否ルールのバイパス
+            </td>
+            <td style="padding: 14px 20px; border-bottom: 1px solid #ddd">
+              SSHキーやGPG構成情報の外部送信
+            </td>
           </tr>
           <tr>
-            <td style="padding: 14px 20px; border-bottom: 1px solid #ddd;">「このファイルを修正して」</td>
-            <td style="padding: 14px 20px; border-bottom: 1px solid #ddd; color: var(--nsk-navy); font-weight: 600;">メインで直接やる</td>
-          </tr>
-          <tr style="background: #f5f7fa;">
-            <td style="padding: 14px 20px;">「設計方針を相談したい」</td>
-            <td style="padding: 14px 20px; color: var(--nsk-navy); font-weight: 600;">メインで直接やる（その後セッション切り替え）</td>
+            <td
+              style="
+                padding: 14px 20px;
+                font-weight: 600;
+                color: var(--nsk-red);
+              "
+            >
+              プロンプト注入
+            </td>
+            <td style="padding: 14px 20px">
+              ソースコードやREADMEに埋め込まれた悪意ある指示
+            </td>
+            <td style="padding: 14px 20px">
+              rm -rfやcurlによるデータ抽出などの不正コマンド実行
+            </td>
           </tr>
         </tbody>
       </table>
     </div>
   </section>
 
-  <!-- スライド 14: Skills — 段階的開示の中核 -->
+  <!-- スライド 4: 内部セキュリティ・アーキテクチャ -->
   <section>
-    <h2>Skills — 段階的開示の中核</h2>
+    <h2>Claude Codeの内部セキュリティ・アーキテクチャ</h2>
     <div class="content">
-      <div style="background: #FFF8E1; padding: 16px 22px; border-radius: 8px; border-left: 5px solid #F59E0B; margin-bottom: 20px;">
-        <p style="font-size: 19pt; margin: 0; line-height: 1.7; color: #333;">
-          <strong>CLAUDE.md</strong>＝毎回読み込み。<strong>Skills</strong>＝必要時のみ読み込み。<br>
-          この使い分けが<strong>段階的開示</strong>の実装。
-        </p>
-      </div>
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: start;">
+      <p style="font-size: 20pt; color: #555; margin-bottom: 20px">
+        「ローカル優先」設計 — ソースコードはローカル環境内に留まる。
+      </p>
+      <div
+        style="
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 36px;
+          align-items: start;
+        "
+      >
         <div>
-          <h3>skillの作り方</h3>
-          <pre><code class="language-markdown">&lt;!-- .claude/skills/deploy/SKILL.md --&gt;
----
-name: deploy
-description: 本番環境へのデプロイ手順
----
-
-# デプロイ手順
-
-1. mainブランチが最新であることを確認
-2. scripts/pre-deploy-check.sh を実行
-3. scripts/deploy.sh production を実行
-4. scripts/post-deploy-verify.sh でヘルスチェック</code></pre>
-        </div>
-        <div>
-          <h3>skillの設計方針</h3>
-          <ul style="font-size: 19pt; line-height: 1.9;">
-            <li>スクリプトやテンプレートを<strong>同梱</strong>可能</li>
-            <li>「生成」でなく同梱ファイルを「使わせる」→ <strong>再現性UP</strong></li>
-            <li>作り方はClaudeに聞ける: <code>「deploy用skillを作りたい」</code></li>
+          <h3>パーミッションベースのアーキテクチャ</h3>
+          <ul style="font-size: 19pt; line-height: 2">
+            <li>
+              ファイル編集、bash実行、ネットワークリクエストに<strong>明示的な承認</strong>が必要
+            </li>
+            <li>
+              書き込みは起動ディレクトリとサブディレクトリに<strong
+                >限定</strong
+              >
+            </li>
+            <li>プロジェクト外は<strong>読み取りのみ</strong>可能</li>
           </ul>
-          <div style="background: #E8F5E9; padding: 14px 18px; border-radius: 6px; border-left: 4px solid #27ae60; margin-top: 16px;">
-            <p style="font-size: 18pt; margin: 0; color: #333;"><strong>常駐知識 → CLAUDE.md ／ タスク固有 → Skill</strong></p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- スライド 15: 設定ファイル -->
-  <section>
-    <h2>設定ファイルのベストプラクティス</h2>
-    <div class="content">
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: start;">
-        <div>
-          <h3>.claude/settings.json の構成例</h3>
-          <pre><code class="language-json">{
-  "permissions": {
-    "allow": [
-      "Read",
-      "Grep",
-      "Glob",
-      "pytest tests/**",
-      "ruff check src/",
-      "mypy src/ --strict"
-    ]
-  },
-  "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "ruff check src/"
-          }
-        ]
-      }
-    ]
-  }
-}</code></pre>
         </div>
         <div>
-          <h3>設定の方針</h3>
-          <ul style="font-size: 19pt; line-height: 2.0;">
-            <li><code>permissions.allow</code> で毎回の承認を省略</li>
-            <li>hooksでリンター・型チェックを自動実行</li>
-            <li>「お願い」より「強制」（確定的 &gt; 確率的）</li>
-            <li>gitにcommitしてチーム共有</li>
+          <h3>残存するリスク</h3>
+          <ul style="font-size: 19pt; line-height: 2">
+            <li>プロジェクト外の「読み取り」権限は依然リスク</li>
+            <li>
+              曖昧な指示で <code>~/.ssh</code> や
+              <code>~/.aws</code> を「探索」する可能性
+            </li>
+            <li>TLS暗号化されたAPI通信にコンテキストが含まれる</li>
           </ul>
-          <h3>/init で始める</h3>
-          <pre><code class="language-bash">cd your-project
-claude
-# セッション内で
-/init</code></pre>
-          <p style="font-size: 18pt; color: #555; line-height: 1.6;"><code>/init</code> でCLAUDE.mdの雛形を自動生成。不要な記述を削って洗練させる。</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- スライド 16: カスタムコマンド -->
-  <section>
-    <h2>カスタムコマンド — 繰り返し作業のパッケージ化</h2>
-    <div class="content">
-      <p style="font-size: 20pt; color: #555; margin-bottom: 16px;"><code>.claude/commands/</code> にMarkdownを置く → スラッシュコマンドになる。</p>
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: start;">
-        <div>
-          <pre><code class="language-markdown">&lt;!-- .claude/commands/review-pr.md --&gt;
----
-description: PRの差分をレビューする
-model: sonnet
----
-
-git diffの結果をレビューしてください。
-対象ブランチ: $ARGUMENTS
-
-観点:
-- バグの可能性
-- テストの漏れ
-- CLAUDE.mdのルールへの違反
-
-問題がなければ「LGTM」とだけ返してください。</code></pre>
-        </div>
-        <div>
-          <h3>使い方</h3>
-          <pre><code class="language-text">/review-pr feature/user-auth</code></pre>
-          <ul style="font-size: 19pt; line-height: 1.9; margin-top: 16px;">
-            <li><code>$ARGUMENTS</code> に引数が入る</li>
-            <li>チーム共有: <code>.claude/commands/</code></li>
-            <li>個人用: <code>~/.claude/commands/</code></li>
-          </ul>
-          <div style="background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%); padding: 16px 20px; border-radius: 8px; border-left: 4px solid var(--nsk-navy); margin-top: 16px;">
-            <p style="font-size: 18pt; margin: 0; color: #333;">コマンド化でチーム全員が同じ品質でタスクを実行。</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- スライド 17: よく使うコマンド一覧 -->
-  <section>
-    <h2>よく使うコマンド一覧</h2>
-    <div class="content">
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start;">
-        <div>
-          <table style="font-size: 15pt; width: 100%; border-collapse: collapse;">
-            <thead>
-              <tr style="background: var(--nsk-navy); color: white;">
-                <th style="padding: 10px 14px; text-align: left;">コマンド</th>
-                <th style="padding: 10px 14px; text-align: left;">用途</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr style="background: #f5f7fa;"><td style="padding: 9px 14px; border-bottom: 1px solid #ddd;"><code>/init</code></td><td style="padding: 9px 14px; border-bottom: 1px solid #ddd;">CLAUDE.mdの雛形を生成</td></tr>
-              <tr><td style="padding: 9px 14px; border-bottom: 1px solid #ddd;"><code>/compact</code></td><td style="padding: 9px 14px; border-bottom: 1px solid #ddd;">コンテキストを要約・圧縮</td></tr>
-              <tr style="background: #f5f7fa;"><td style="padding: 9px 14px; border-bottom: 1px solid #ddd;"><code>/clear</code></td><td style="padding: 9px 14px; border-bottom: 1px solid #ddd;">コンテキストをリセット</td></tr>
-              <tr><td style="padding: 9px 14px; border-bottom: 1px solid #ddd;"><code>/model haiku</code></td><td style="padding: 9px 14px; border-bottom: 1px solid #ddd;">軽量モデルに切り替え</td></tr>
-              <tr style="background: #f5f7fa;"><td style="padding: 9px 14px; border-bottom: 1px solid #ddd;"><code>/model opus</code></td><td style="padding: 9px 14px; border-bottom: 1px solid #ddd;">高性能モデルに切り替え</td></tr>
-              <tr><td style="padding: 9px 14px; border-bottom: 1px solid #ddd;"><code>/effort low</code></td><td style="padding: 9px 14px; border-bottom: 1px solid #ddd;">推論の深さを下げる</td></tr>
-              <tr style="background: #f5f7fa;"><td style="padding: 9px 14px; border-bottom: 1px solid #ddd;"><code>/plan</code></td><td style="padding: 9px 14px; border-bottom: 1px solid #ddd;">計画モード（実装前に計画を立てる）</td></tr>
-              <tr><td style="padding: 9px 14px; border-bottom: 1px solid #ddd;"><code>/status</code></td><td style="padding: 9px 14px; border-bottom: 1px solid #ddd;">現在の設定状態を確認</td></tr>
-              <tr style="background: #f5f7fa;"><td style="padding: 9px 14px; border-bottom: 1px solid #ddd;"><code>/doctor</code></td><td style="padding: 9px 14px; border-bottom: 1px solid #ddd;">環境の問題を診断</td></tr>
-              <tr><td style="padding: 9px 14px; border-bottom: 1px solid #ddd;"><code>/resume</code></td><td style="padding: 9px 14px; border-bottom: 1px solid #ddd;">過去のセッションを再開</td></tr>
-              <tr style="background: #f5f7fa;"><td style="padding: 9px 14px; border-bottom: 1px solid #ddd;"><code>/hooks</code></td><td style="padding: 9px 14px; border-bottom: 1px solid #ddd;">設定済みhookの一覧</td></tr>
-              <tr><td style="padding: 9px 14px;"><code>/agents</code></td><td style="padding: 9px 14px;">サブエージェントの管理</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div>
-          <h3>ワンライナーでの利用</h3>
-          <pre><code class="language-bash"># パイプで渡す
-cat error.log | claude -p "このエラーの原因を特定して"
-
-# 非対話で実行
-claude -p "tests/ 以下のテストを全部実行して結果を報告して"</code></pre>
-          <div style="background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%); padding: 20px 24px; border-radius: 8px; border-left: 5px solid var(--nsk-navy); margin-top: 24px;">
-            <p style="font-size: 19pt; line-height: 1.7; margin: 0; color: #333;">
-              <strong>-p フラグ:</strong> 非対話実行。CI/CDへの組み込みに便利。
+          <div
+            style="
+              background: #ffebee;
+              padding: 14px 18px;
+              border-radius: 6px;
+              border-left: 4px solid #e74c3c;
+              margin-top: 16px;
+            "
+          >
+            <p style="font-size: 18pt; margin: 0; color: #333">
+              セキュリティ構成の責任は<strong>完全にユーザー</strong>にある。
             </p>
           </div>
         </div>
@@ -625,31 +236,607 @@ claude -p "tests/ 以下のテストを全部実行して結果を報告して"<
     </div>
   </section>
 
-  <!-- スライド 18: まとめ -->
+  <!-- スライド 5: Gitエコシステムとの統合リスク -->
   <section>
-    <h2>まとめ — 明日から使う3つの習慣</h2>
+    <h2>Gitエコシステムとの統合リスク</h2>
     <div class="content">
-      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; margin-bottom: 28px;">
-        <div style="background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%); padding: 24px 26px; border-radius: 10px; border-left: 6px solid var(--nsk-red);">
-          <h3 style="margin-top: 0; font-size: 21pt; color: var(--nsk-red);">① セッションを使い捨てろ</h3>
-          <p style="font-size: 18pt; line-height: 1.7; color: #333;">結論をファイルに書き出し、新セッションで実装。</p>
+      <div
+        style="
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 32px;
+          align-items: start;
+        "
+      >
+        <div>
+          <h3>自動読み取りの問題</h3>
+          <div
+            style="
+              background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%);
+              padding: 20px 24px;
+              border-radius: 10px;
+              border-left: 5px solid var(--nsk-navy);
+              margin-bottom: 16px;
+            "
+          >
+            <p style="font-size: 19pt; line-height: 1.7; color: #333">
+              セッション開始時にリポジトリのステータスやコミット履歴を含むGitメタデータを<strong>自動的に読み取る</strong>。
+            </p>
+          </div>
+          <ul style="font-size: 19pt; line-height: 2">
+            <li>
+              大規模プロジェクトではGitログだけで<strong>数万トークン</strong>を消費
+            </li>
+            <li>トークンの浪費がコスト・品質に影響</li>
+          </ul>
         </div>
-        <div style="background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%); padding: 24px 26px; border-radius: 10px; border-left: 6px solid var(--nsk-red);">
-          <h3 style="margin-top: 0; font-size: 21pt; color: var(--nsk-red);">② ツールに任せろ</h3>
-          <p style="font-size: 18pt; line-height: 1.7; color: #333;">hooksで自動化、計算はスクリプトで。</p>
-        </div>
-        <div style="background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%); padding: 24px 26px; border-radius: 10px; border-left: 6px solid var(--nsk-red);">
-          <h3 style="margin-top: 0; font-size: 21pt; color: var(--nsk-red);">③ コンテキストを守れ</h3>
-          <p style="font-size: 18pt; line-height: 1.7; color: #333;">サブエージェントに委譲。Skillsで動的読み込み。</p>
+        <div>
+          <h3>「追記専用」データモデルの危険性</h3>
+          <div
+            style="
+              background: #fff3cd;
+              padding: 20px 24px;
+              border-radius: 8px;
+              border-left: 5px solid #f59e0b;
+              margin-bottom: 16px;
+            "
+          >
+            <p
+              style="font-size: 19pt; line-height: 1.7; margin: 0; color: #333"
+            >
+              過去に一度でもコミットされたシークレットは、<strong>HEADから削除されていても履歴からアクセス可能</strong>。
+            </p>
+          </div>
+          <ul style="font-size: 19pt; line-height: 2">
+            <li>AIエージェントはGit履歴を遡ってシークレットを発見しうる</li>
+            <li>
+              リポジトリレベルのシークレットスキャンと<strong>履歴のクレンジング</strong>が不可欠
+            </li>
+          </ul>
         </div>
       </div>
-      <div style="background: #FFF8E1; padding: 20px 28px; border-radius: 8px; border-left: 5px solid #F59E0B;">
-        <p style="font-size: 20pt; line-height: 1.8; margin: 0; color: #333;">
-          この3つでClaude Codeの効果は大きく変わる。<br>
-          慣れたらカスタムコマンド、agent teams、git worktreeへ。
+    </div>
+  </section>
+
+  <!-- スライド 6: 階層的な設定管理 -->
+  <section>
+    <h2>階層的な設定管理による防御戦略</h2>
+    <div class="content">
+      <p style="font-size: 20pt; color: #555; margin-bottom: 16px">
+        設定は4つの階層で適用される。上位が優先。
+      </p>
+      <table style="font-size: 17pt; width: 100%; border-collapse: collapse">
+        <thead>
+          <tr style="background: var(--nsk-navy); color: white">
+            <th style="padding: 12px 18px; text-align: left">設定スコープ</th>
+            <th style="padding: 12px 18px; text-align: left">
+              Ubuntu/Linux上の場所
+            </th>
+            <th style="padding: 12px 18px; text-align: center; width: 10%">
+              優先順位
+            </th>
+            <th style="padding: 12px 18px; text-align: left">目的</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="background: #f5f7fa">
+            <td
+              style="
+                padding: 12px 18px;
+                border-bottom: 1px solid #ddd;
+                font-weight: 600;
+              "
+            >
+              Managed (管理)
+            </td>
+            <td style="padding: 12px 18px; border-bottom: 1px solid #ddd">
+              <code>/etc/claude-code/managed-settings.json</code>
+            </td>
+            <td
+              style="
+                padding: 12px 18px;
+                border-bottom: 1px solid #ddd;
+                text-align: center;
+                color: var(--nsk-red);
+                font-weight: 600;
+              "
+            >
+              1 (最高)
+            </td>
+            <td style="padding: 12px 18px; border-bottom: 1px solid #ddd">
+              組織全体で強制。ユーザー上書き不可
+            </td>
+          </tr>
+          <tr>
+            <td
+              style="
+                padding: 12px 18px;
+                border-bottom: 1px solid #ddd;
+                font-weight: 600;
+              "
+            >
+              Local (ローカル)
+            </td>
+            <td style="padding: 12px 18px; border-bottom: 1px solid #ddd">
+              <code>.claude/settings.local.json</code>
+            </td>
+            <td
+              style="
+                padding: 12px 18px;
+                border-bottom: 1px solid #ddd;
+                text-align: center;
+              "
+            >
+              2
+            </td>
+            <td style="padding: 12px 18px; border-bottom: 1px solid #ddd">
+              個別開発者のプロジェクト固有設定
+            </td>
+          </tr>
+          <tr style="background: #f5f7fa">
+            <td
+              style="
+                padding: 12px 18px;
+                border-bottom: 1px solid #ddd;
+                font-weight: 600;
+              "
+            >
+              Project (プロジェクト)
+            </td>
+            <td style="padding: 12px 18px; border-bottom: 1px solid #ddd">
+              <code>.claude/settings.json</code>
+            </td>
+            <td
+              style="
+                padding: 12px 18px;
+                border-bottom: 1px solid #ddd;
+                text-align: center;
+              "
+            >
+              3
+            </td>
+            <td style="padding: 12px 18px; border-bottom: 1px solid #ddd">
+              チーム共有設定。Gitで管理
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 12px 18px; font-weight: 600">
+              User (ユーザー)
+            </td>
+            <td style="padding: 12px 18px">
+              <code>~/.claude/settings.json</code>
+            </td>
+            <td style="padding: 12px 18px; text-align: center">4 (最低)</td>
+            <td style="padding: 12px 18px">
+              全プロジェクト共通のグローバル設定
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- スライド 7: permissions.denyによる防御 -->
+  <section>
+    <h2>permissions.deny — 機密ファイルへのアクセス遮断</h2>
+    <div class="content">
+      <p style="font-size: 20pt; color: #555; margin-bottom: 16px">
+        セキュリティ構成の核心。<code>~/.ssh/</code> や
+        <code>~/.aws/</code> へのアクセスを明示的に拒否。
+      </p>
+      <div
+        style="
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 28px;
+          align-items: start;
+        "
+      >
+        <div>
+          <h3>推奨される設定例</h3>
+          <pre><code class="language-json">{
+  "permissions": {
+    "deny": [
+      "Read(./.env)",
+      "Read(~/.ssh/**)",
+      "Read(~/.aws/**)",
+      "Bash(curl:*)",
+      "Bash(wget:*)",
+      "Bash(cat .env:*)",
+      "Bash(cat ~/.ssh/*:*)",
+      "Bash(cat ~/.aws/*:*)"
+    ]
+  }
+}</code></pre>
+        </div>
+        <div>
+          <h3>重要な注意点</h3>
+          <ul style="font-size: 19pt; line-height: 2">
+            <li><code>Read(./.env)</code> はClaude標準ツールのみ制限</li>
+            <li>
+              <code>cat .env</code> 等のBashは<strong>別途deny</strong>が必要
+            </li>
+            <li>
+              <code>curl</code> や <code>wget</code> も拒否リストに登録すべき
+            </li>
+          </ul>
+          <div
+            style="
+              background: #fff3e0;
+              padding: 14px 18px;
+              border-radius: 6px;
+              border-left: 4px solid #e67e22;
+              margin-top: 16px;
+            "
+          >
+            <p style="font-size: 18pt; margin: 0; color: #333">
+              <strong>注意:</strong>
+              標準ツールのdenyだけでは不十分。Bash経由のアクセスも必ずブロックする。
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- スライド 8: direnvによる資格情報管理 -->
+  <section>
+    <h2>資格情報管理① — direnvによるディレクトリ単位の制御</h2>
+    <div class="content">
+      <p style="font-size: 20pt; color: #555; margin-bottom: 16px">
+        .envファイルへの直接保存を避け、ディレクトリに応じた環境変数の自動ロード/アンロードを実現。
+      </p>
+      <div
+        style="
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 28px;
+          align-items: start;
+        "
+      >
+        <div>
+          <h3>仕組み</h3>
+          <pre><code class="language-bash"># .envrc（プロジェクトルート）
+export AWS_ACCESS_KEY_ID="AKIA..."
+export ANTHROPIC_API_KEY="sk-ant-..."
+
+# ディレクトリ移動時
+cd your-project   # → 変数が自動ロード
+cd ..             # → 変数が自動アンロード</code></pre>
+          <div
+            style="
+              background: #e8f5e9;
+              padding: 14px 18px;
+              border-radius: 6px;
+              border-left: 4px solid #27ae60;
+              margin-top: 16px;
+            "
+          >
+            <p style="font-size: 18pt; margin: 0; color: #333">
+              ディレクトリを抜けると変数は自動的に消える。
+            </p>
+          </div>
+        </div>
+        <div>
+          <h3>セキュリティポイント</h3>
+          <ul style="font-size: 19pt; line-height: 2">
+            <li>
+              <code>.envrc</code> は<strong>決してGitにコミットしない</strong>
+            </li>
+            <li>
+              グローバルな <code>.gitignore</code> で全プロジェクトから除外
+            </li>
+            <li>変更時は <code>direnv allow</code> で明示的承認が必要</li>
+            <li>別ディレクトリのAIセッションが機密情報を継承しない</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- スライド 9: secret-toolとGNOMEキーリング -->
+  <section>
+    <h2>資格情報管理② — secret-toolとGNOMEキーリング</h2>
+    <div class="content">
+      <p style="font-size: 20pt; color: #555; margin-bottom: 16px">
+        資格情報をプレーンテキストから完全に排除し、OSのキーリングに保存する。
+      </p>
+      <div
+        style="
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 28px;
+          align-items: start;
+        "
+      >
+        <div>
+          <h3>保存と取得</h3>
+          <pre><code class="language-bash"># シークレットの保存
+secret-tool store --label="Anthropic API Key" \
+  service anthropic user developer
+
+# .envrcから取得（direnvと組み合わせ）
+export ANTHROPIC_API_KEY=$(
+  secret-tool lookup service anthropic \
+    user developer
+)</code></pre>
+        </div>
+        <div>
+          <h3>メリット</h3>
+          <ul style="font-size: 19pt; line-height: 2">
+            <li>APIキーは<strong>メモリ上にのみ</strong>存在</li>
+            <li>ディスク上のファイルには<strong>書き込まれない</strong></li>
+            <li>シェル履歴にキーが残るリスクを<strong>劇的に低減</strong></li>
+            <li>libsecretライブラリのCLIインターフェース</li>
+          </ul>
+          <div
+            style="
+              background: #e8f5e9;
+              padding: 14px 18px;
+              border-radius: 6px;
+              border-left: 4px solid #27ae60;
+              margin-top: 16px;
+            "
+          >
+            <p style="font-size: 18pt; margin: 0; color: #333">
+              <strong>direnv + secret-tool</strong>
+              の組み合わせが最も安全なパターン。
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- スライド 10: 自動化された防御策 -->
+  <section>
+    <h2>自動化された防御策 — シークレットスキャンと検証</h2>
+    <div class="content">
+      <p style="font-size: 20pt; color: #555; margin-bottom: 20px">
+        手動設定だけでは不十分。多層防御の一環として自動スキャンツールを開発サイクルに組み込む。
+      </p>
+      <div
+        style="
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr;
+          gap: 20px;
+          margin-bottom: 20px;
+        "
+      >
+        <div
+          style="
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%);
+            padding: 20px 24px;
+            border-radius: 10px;
+            border-left: 5px solid var(--nsk-red);
+          "
+        >
+          <h3 style="margin-top: 0; font-size: 20pt">Gitleaks</h3>
+          <p style="font-size: 18pt; line-height: 1.6; color: #444">
+            軽量なプリコミットフック。高エントロピー文字列やAWS/Anthropicキーパターンを検出し、<strong>commitを未然にブロック</strong>。
+          </p>
+        </div>
+        <div
+          style="
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%);
+            padding: 20px 24px;
+            border-radius: 10px;
+            border-left: 5px solid var(--nsk-red);
+          "
+        >
+          <h3 style="margin-top: 0; font-size: 20pt">TruffleHog</h3>
+          <p style="font-size: 18pt; line-height: 1.6; color: #444">
+            パターンマッチングを超えた「検証」機能。APIと通信してキーが<strong>実際に有効か確認</strong>。<code
+              >--only-verified</code
+            >
+            で誤検知を排除。
+          </p>
+        </div>
+        <div
+          style="
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%);
+            padding: 20px 24px;
+            border-radius: 10px;
+            border-left: 5px solid var(--nsk-red);
+          "
+        >
+          <h3 style="margin-top: 0; font-size: 20pt">OIDC認証</h3>
+          <p style="font-size: 18pt; line-height: 1.6; color: #444">
+            CI/CDでOpenID
+            Connectを採用し、<strong>静的キーを完全排除</strong>。GitHub
+            Actionsから一時的な短命資格情報を取得。
+          </p>
+        </div>
+      </div>
+      <div
+        style="
+          background: #fff8e1;
+          padding: 16px 22px;
+          border-radius: 8px;
+          border-left: 5px solid #f59e0b;
+        "
+      >
+        <p style="font-size: 19pt; margin: 0; line-height: 1.7; color: #333">
+          <strong>Gitleaks（ローカル）</strong>→
+          <strong>TruffleHog（CI/CD）</strong>→
+          <strong>OIDC（究極解）</strong> の順で防御を強化。
         </p>
       </div>
     </div>
   </section>
 
+  <!-- スライド 11: プロンプトインジェクションとサブエージェント対策 -->
+  <section>
+    <h2>プロンプトインジェクションとサブエージェント対策</h2>
+    <div class="content">
+      <p style="font-size: 20pt; color: #555; margin-bottom: 16px">
+        自律モードやサブエージェントの普及に伴い、攻撃表面積は拡大。<br />
+        <strong
+          >AIレベルのパーミッションを過信せず、OSレベルのサンドボックスを構築する。</strong
+        >
+      </p>
+      <table style="font-size: 17pt; width: 100%; border-collapse: collapse">
+        <thead>
+          <tr style="background: var(--nsk-navy); color: white">
+            <th style="padding: 12px 18px; text-align: left; width: 25%">
+              セキュリティ対策
+            </th>
+            <th style="padding: 12px 18px; text-align: left; width: 35%">
+              実装方法
+            </th>
+            <th style="padding: 12px 18px; text-align: left">防御効果</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="background: #f5f7fa">
+            <td
+              style="
+                padding: 12px 18px;
+                border-bottom: 1px solid #ddd;
+                font-weight: 600;
+              "
+            >
+              サンドボックス化
+            </td>
+            <td style="padding: 12px 18px; border-bottom: 1px solid #ddd">
+              <code>/sandbox</code> コマンド、Ubuntu上の bubblewrap
+            </td>
+            <td style="padding: 12px 18px; border-bottom: 1px solid #ddd">
+              サブエージェント含む全プロセスの不正アクセス防止
+            </td>
+          </tr>
+          <tr>
+            <td
+              style="
+                padding: 12px 18px;
+                border-bottom: 1px solid #ddd;
+                font-weight: 600;
+              "
+            >
+              フックの無効化
+            </td>
+            <td style="padding: 12px 18px; border-bottom: 1px solid #ddd">
+              <code>"disableAllHooks": true</code>
+            </td>
+            <td style="padding: 12px 18px; border-bottom: 1px solid #ddd">
+              自動実行スクリプトによる悪意あるコードの永続化防止
+            </td>
+          </tr>
+          <tr style="background: #f5f7fa">
+            <td
+              style="
+                padding: 12px 18px;
+                border-bottom: 1px solid #ddd;
+                font-weight: 600;
+              "
+            >
+              MCPサーバーの制限
+            </td>
+            <td style="padding: 12px 18px; border-bottom: 1px solid #ddd">
+              信頼できるサーバーのみ許可リスト登録
+            </td>
+            <td style="padding: 12px 18px; border-bottom: 1px solid #ddd">
+              悪意あるModel Context Protocolサーバーの実行防止
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 12px 18px; font-weight: 600">ソフトデナイ</td>
+            <td style="padding: 12px 18px"><code>autoMode.soft_deny</code></td>
+            <td style="padding: 12px 18px">
+              PII・本番環境データへの接触をAIレベルで警告
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- スライド 12: まとめ -->
+  <section>
+    <h2>まとめ — 多層防御ロードマップ</h2>
+    <div class="content">
+      <div
+        style="
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr 1fr;
+          gap: 16px;
+          margin-bottom: 24px;
+        "
+      >
+        <div
+          style="
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%);
+            padding: 20px 22px;
+            border-radius: 10px;
+            border-left: 6px solid var(--nsk-red);
+          "
+        >
+          <h3 style="margin-top: 0; font-size: 19pt; color: var(--nsk-red)">
+            ① シークレット排除
+          </h3>
+          <p style="font-size: 17pt; line-height: 1.6; color: #333">
+            direnv + secret-toolでプレーンテキストを排除。
+          </p>
+        </div>
+        <div
+          style="
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%);
+            padding: 20px 22px;
+            border-radius: 10px;
+            border-left: 6px solid var(--nsk-red);
+          "
+        >
+          <h3 style="margin-top: 0; font-size: 19pt; color: var(--nsk-red)">
+            ② アクセス制御
+          </h3>
+          <p style="font-size: 17pt; line-height: 1.6; color: #333">
+            permissions.denyの階層的適用でOS機密領域を遮断。
+          </p>
+        </div>
+        <div
+          style="
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%);
+            padding: 20px 22px;
+            border-radius: 10px;
+            border-left: 6px solid var(--nsk-red);
+          "
+        >
+          <h3 style="margin-top: 0; font-size: 19pt; color: var(--nsk-red)">
+            ③ 自動スキャン
+          </h3>
+          <p style="font-size: 17pt; line-height: 1.6; color: #333">
+            Gitleaks + TruffleHogでコミット前に最終防波堤。
+          </p>
+        </div>
+        <div
+          style="
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%);
+            padding: 20px 22px;
+            border-radius: 10px;
+            border-left: 6px solid var(--nsk-red);
+          "
+        >
+          <h3 style="margin-top: 0; font-size: 19pt; color: var(--nsk-red)">
+            ④ 環境隔離
+          </h3>
+          <p style="font-size: 17pt; line-height: 1.6; color: #333">
+            bubblewrap / DockerでLinuxカーネルレベルの防御。
+          </p>
+        </div>
+      </div>
+      <div
+        style="
+          background: #fff8e1;
+          padding: 20px 28px;
+          border-radius: 8px;
+          border-left: 5px solid #f59e0b;
+        "
+      >
+        <p style="font-size: 20pt; line-height: 1.8; margin: 0; color: #333">
+          AIエージェントを「全権限を持つ可能性があるが、完全には信頼できない実習生」として扱う。<br />
+          ローカル環境のセキュリティ確保は、現代のソフトウェアエンジニアリングにおける<strong>不可欠なスキル</strong>である。
+        </p>
+      </div>
+    </div>
+  </section>
 </div>
