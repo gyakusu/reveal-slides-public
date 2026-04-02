@@ -107,6 +107,11 @@
               カラム名などの<strong>構造情報だけ</strong>Claude Codeに伝えてスクリプトを作成してもらい、<strong>実行は別ターミナルで手動で行う</strong>。最もシンプルかつ確実。
             </p>
           </div>
+          <div class="callout-orange">
+            <p>
+              <strong>なぜ方法②が重要か：</strong>deny設定でファイルの直接読み取りを防いでも、Claudeがスクリプトを実行すると<strong>標準出力経由で機密データを見てしまう</strong>（例：<code>df.head()</code>の結果）。実行を分離すれば<strong>この間接リークを完全に防げる</strong>。
+            </p>
+          </div>
           <h3 style="margin-top: 16px;">状況別おすすめ</h3>
           <table class="table-md">
             <tbody>
@@ -144,6 +149,15 @@
 cat ~/.ssh/id_rsa
 python3 -c "print(open('/home/user/.ssh/id_rsa').read())"</code></pre>
           <p>Readツールのdenyは<strong>Claude Codeの組み込みツールだけ</strong>を制限する。Bash経由のアクセスは別途denyが必要。</p>
+          <div class="callout-red" style="margin-top: 12px;">
+            <p><strong>さらに厄介な迂回：出力経由の間接リーク</strong></p>
+          </div>
+          <pre><code class="language-python"># Claude自身が書いたスクリプトをBashで実行すると…
+import pandas as pd
+df = pd.read_csv("data/sensitive/customers.csv")
+print(df.columns)  # → Claudeがこの出力を読んでしまう
+print(df.head())   # → 機密データがClaudeに漏れる</code></pre>
+          <p>ファイルの直接読み取りをdenyしても、<strong>スクリプト経由の標準出力</strong>はClaudeに返される。</p>
         </div>
         <div>
           <h3>対策の比較</h3>
@@ -176,10 +190,20 @@ python3 -c "print(open('/home/user/.ssh/id_rsa').read())"</code></pre>
                 <td>ほぼゼロ</td>
                 <td>初期構築に手間</td>
               </tr>
+              <tr class="row-alt">
+                <td class="td-label-plain">Hooks + CLAUDE.md</td>
+                <td>間接リークを軽減</td>
+                <td>簡単</td>
+              </tr>
+              <tr>
+                <td class="td-label-plain">実行を分離（方法②）</td>
+                <td>間接リークをゼロに</td>
+                <td>やや手間</td>
+              </tr>
             </tbody>
           </table>
           <div class="callout-orange">
-            <p>permissions.denyは<strong>第一の防御線</strong>。本当に守りたいものがあるなら<strong>サンドボックスかDocker</strong>を使おう。</p>
+            <p>permissions.denyは<strong>第一の防御線</strong>。間接リーク対策には<strong>Hooks・CLAUDE.md・実行分離</strong>を組み合わせよう。</p>
           </div>
         </div>
       </div>
@@ -278,7 +302,60 @@ sudo apt-get install bubblewrap socat
     </div>
   </section>
 
-  <!-- スライド 8: Q4 — 他ユーザーのファイルやOS領域へのアクセス -->
+  <!-- スライド 8: 間接リーク対策 — Hooks と CLAUDE.md -->
+  <section>
+    <h2>Q3.5 出力経由の間接リークを防ぐには？</h2>
+    <div class="content">
+      <p class="lead-sm">サンドボックスやdenyで直接アクセスを防いでも、<strong>スクリプトの実行結果（stdout）経由でClaudeが機密データを見てしまう</strong>問題がある。</p>
+      <div class="grid-2col-md">
+        <div>
+          <h3>対策①: PreToolUse Hooksで実行前検閲</h3>
+          <pre><code class="language-json">// settings.json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/block-sensitive-output.sh"
+          }
+        ]
+      }
+    ]
+  }
+}</code></pre>
+          <p>フックスクリプトで <code>df.head()</code> や <code>print(df)</code> 等のパターンを含むコマンドを<strong>実行前にブロック</strong>できる。</p>
+        </div>
+        <div>
+          <h3>対策②: CLAUDE.mdでルール化</h3>
+          <pre><code class="language-markdown"># CLAUDE.md に記載
+## データ分析ルール
+- 分析結果はoutput/に
+  ファイル出力すること
+- print()で機密データを
+  標準出力に出さないこと
+- 結果確認は
+  「output/result.csvに書き出しました」
+  と報告するだけにすること</code></pre>
+          <div class="callout-yellow" style="margin-top: 12px;">
+            <p>
+              <strong>注意：</strong>CLAUDE.mdはプロンプトレベルの防御。通常利用には実用的だが、完全な保証はない。
+            </p>
+          </div>
+          <div class="callout-green">
+            <p>
+              <strong>機密性が高い場合の鉄則：</strong><br>
+              コードだけ書かせて<strong>実行は別ターミナル</strong>で行う（方法②）。これが唯一の完全な対策。
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- スライド 9: Q4 — 他ユーザーのファイルやOS領域へのアクセス -->
   <section>
     <h2>Q4. 他の人のファイルやOS領域は読まれない？</h2>
     <div class="content">
@@ -459,9 +536,9 @@ repos:
 
   <!-- スライド 12: まとめ -->
   <section>
-    <h2>まとめ — 今日から実践する3つのこと</h2>
+    <h2>まとめ — 今日から実践する4つのこと</h2>
     <div class="content">
-      <div class="grid-3col">
+      <div class="grid-2col">
         <div class="summary-card">
           <h3>① アクセス制御を設定する</h3>
           <p>
@@ -470,14 +547,21 @@ repos:
           </p>
         </div>
         <div class="summary-card">
-          <h3>② APIキーを正しく管理する</h3>
+          <h3>② 間接リークにも備える</h3>
+          <p>
+            <strong>Hooks</strong>で危険なコマンドを事前ブロック。<strong>CLAUDE.md</strong>で出力ルールを定義。<br>
+            機密性が高ければ<strong>実行は別ターミナル</strong>で。
+          </p>
+        </div>
+        <div class="summary-card">
+          <h3>③ APIキーを正しく管理する</h3>
           <p>
             <code>.env</code> に直接書かない。<br>
             <strong>direnv + secret-tool</strong> でファイルにもシェル履歴にも残さない。
           </p>
         </div>
         <div class="summary-card">
-          <h3>③ Gitleaksを入れる</h3>
+          <h3>④ Gitleaksを入れる</h3>
           <p>
             プリコミットフックで<strong>うっかりコミットを自動ブロック</strong>。<br>
             一度入った秘密は消せない。
@@ -487,7 +571,7 @@ repos:
       <div class="callout-yellow">
         <p>
           Claude Codeは<strong>優秀だけど何でも読める実習生</strong>。<br>
-          見せたくないものには鍵をかけよう。設定は一度やれば毎回の手間はかからない。
+          見せたくないものには鍵をかけよう。直接アクセスだけでなく<strong>出力経由のリーク</strong>にも注意。
         </p>
       </div>
     </div>
