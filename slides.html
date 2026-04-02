@@ -8,16 +8,48 @@
     </p>
   </section>
 
-  <!-- スライド 2: この研修で学ぶこと -->
+  <!-- スライド 2: なぜこの研修が必要か -->
+  <section>
+    <h2>なぜこの研修が必要か</h2>
+    <div class="content">
+      <p class="lead">Claude Codeから機密情報が漏れるとしたら、どの経路か？</p>
+      <div class="grid-2col">
+        <div>
+          <h3>リスク大：Gitリポジトリ経由</h3>
+          <div class="callout-red">
+            <p>
+              APIキーや機密ファイルが<strong>GitHubにpush</strong>されると、<br>
+              自動クローラーが数分で検出・悪用する。<br>
+              <strong>履歴に残るので削除も困難。</strong>
+            </p>
+          </div>
+        </div>
+        <div>
+          <h3>リスク小：会話データの漏洩</h3>
+          <div class="callout-yellow">
+            <p>
+              Claude TeamsやClaude Proでは<br>
+              <strong>会話データはモデル学習に使用されない</strong>。<br>
+              規約上のリスクは限定的。
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="callout-green">
+        <p>
+          <strong>それでも「念のための対策」が必要な理由：</strong><br>
+          規約は変わりうる。Claude Codeは手元のファイルを広く読める。<br>
+          「見せなくていいものは見せない」習慣が、将来のリスクを防ぐ。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- スライド 3: この研修で学ぶこと -->
   <section>
     <h2>この研修で学ぶこと</h2>
     <div class="content">
-      <div class="callout-red">
-        <p>
-          漏洩したAPIキーは<strong>数分以内</strong>に自動クローラーで検出・悪用される。<br>
-          「あとで消せばいい」は通用しない。
-        </p>
-      </div>
+      <p class="lead">Git経由の漏洩を防ぐために、具体的な設定と運用を学ぶ。</p>
       <div class="grid-2col">
         <div>
           <h3>今日のテーマ</h3>
@@ -34,6 +66,12 @@
             <p>
               研修後すぐに<strong>自分の環境で実践できる</strong>セキュリティ設定を身につける。<br>
               難しい理論より「具体的に何をすればいいか」を重視します。
+            </p>
+          </div>
+          <div class="callout-yellow" style="margin-top: 16px;">
+            <p>
+              <strong>前提：</strong>Claude Teams/Proを使用し、<br>
+              会話データの学習利用はOFFになっていること。
             </p>
           </div>
         </div>
