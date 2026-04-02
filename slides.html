@@ -41,7 +41,7 @@
     </div>
   </section>
 
-  <!-- スライド 3: Claude Codeの基本的なアクセス権限 -->
+  <!-- スライド 3: 基本アクセス権限 -->
   <section>
     <h2>Claude Codeの基本的なアクセス権限</h2>
     <div class="content">
@@ -81,283 +81,9 @@
     </div>
   </section>
 
-  <!-- スライド 4: Q1 — 見せたくないファイルの守り方 -->
+  <!-- スライド 4: OS権限と他ユーザーのファイル -->
   <section>
-    <h2>Q1. 見せたくないファイルを守るには？</h2>
-    <div class="content">
-      <p class="lead-sm">例：Pythonで解析が必要だが、Claude Codeには中身を見せたくないCSVがある。</p>
-      <div class="grid-2col-md">
-        <div>
-          <h3>方法①: permissions.denyでブロック</h3>
-          <pre><code class="language-json">{
-  "permissions": {
-    "deny": [
-      "Read(data/sensitive/*.csv)",
-      "Bash(cat *sensitive*)",
-      "Bash(head *sensitive*)"
-    ]
-  }
-}</code></pre>
-          <p>Claude Codeがファイルを直接読めなくなる。スクリプト作成の支援は引き続き可能。</p>
-        </div>
-        <div>
-          <h3>方法②: コードだけ書かせて実行は自分で</h3>
-          <div class="info-card">
-            <p>
-              カラム名などの<strong>構造情報だけ</strong>Claude Codeに伝えてスクリプトを作成してもらい、<strong>実行は別ターミナルで手動で行う</strong>。最もシンプルかつ確実。
-            </p>
-          </div>
-          <div class="callout-orange">
-            <p>
-              <strong>なぜ方法②が重要か：</strong>deny設定でファイルの直接読み取りを防いでも、Claudeがスクリプトを実行すると<strong>標準出力経由で機密データを見てしまう</strong>（例：<code>df.head()</code>の結果）。実行を分離すれば<strong>この間接リークを完全に防げる</strong>。
-            </p>
-          </div>
-          <h3 style="margin-top: 16px;">状況別おすすめ</h3>
-          <table class="table-md">
-            <tbody>
-              <tr class="row-alt">
-                <td class="td-label-plain">手軽にやりたい</td>
-                <td>deny設定 + 実行は自分で</td>
-              </tr>
-              <tr>
-                <td class="td-label-plain">組織でルール化</td>
-                <td>deny + ディレクトリ分離</td>
-              </tr>
-              <tr class="row-alt">
-                <td class="td-label-plain">機密性が非常に高い</td>
-                <td>サンドボックス（後述）</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- スライド 5: Q2 — permissions.denyは迂回されないか？ -->
-  <section>
-    <h2>Q2. permissions.denyは迂回されない？</h2>
-    <div class="content">
-      <p class="lead-sm">結論：<strong>設定の仕方次第では迂回されうる。</strong></p>
-      <div class="grid-2col-md">
-        <div>
-          <h3>迂回の具体例</h3>
-          <div class="callout-red">
-            <p><code>Read(~/.ssh/*)</code> をdenyしても…</p>
-          </div>
-          <pre><code class="language-bash"># これらはBashツール経由なので別途ブロックが必要
-cat ~/.ssh/id_rsa
-python3 -c "print(open('/home/user/.ssh/id_rsa').read())"</code></pre>
-          <p>Readツールのdenyは<strong>Claude Codeの組み込みツールだけ</strong>を制限する。Bash経由のアクセスは別途denyが必要。</p>
-          <div class="callout-red" style="margin-top: 12px;">
-            <p><strong>さらに厄介な迂回：出力経由の間接リーク</strong></p>
-          </div>
-          <pre><code class="language-python"># Claude自身が書いたスクリプトをBashで実行すると…
-import pandas as pd
-df = pd.read_csv("data/sensitive/customers.csv")
-print(df.columns)  # → Claudeがこの出力を読んでしまう
-print(df.head())   # → 機密データがClaudeに漏れる</code></pre>
-          <p>ファイルの直接読み取りをdenyしても、<strong>スクリプト経由の標準出力</strong>はClaudeに返される。</p>
-        </div>
-        <div>
-          <h3>対策の比較</h3>
-          <table class="table-md">
-            <thead>
-              <tr>
-                <th>対策</th>
-                <th>迂回リスク</th>
-                <th>手軽さ</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="row-alt">
-                <td class="td-label-plain">permissions.deny</td>
-                <td>パターン漏れの可能性あり</td>
-                <td>簡単</td>
-              </tr>
-              <tr>
-                <td class="td-label-plain">サンドボックス</td>
-                <td>非常に低い（カーネルレベル）</td>
-                <td>簡単</td>
-              </tr>
-              <tr class="row-alt">
-                <td class="td-label-plain">OS専用ユーザー</td>
-                <td>非常に低い</td>
-                <td>やや手間</td>
-              </tr>
-              <tr>
-                <td class="td-label-plain">Docker隔離</td>
-                <td>ほぼゼロ</td>
-                <td>初期構築に手間</td>
-              </tr>
-              <tr class="row-alt">
-                <td class="td-label-plain">Hooks + CLAUDE.md</td>
-                <td>間接リークを軽減</td>
-                <td>簡単</td>
-              </tr>
-              <tr>
-                <td class="td-label-plain">実行を分離（方法②）</td>
-                <td>間接リークをゼロに</td>
-                <td>やや手間</td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="callout-orange">
-            <p>permissions.denyは<strong>第一の防御線</strong>。間接リーク対策には<strong>Hooks・CLAUDE.md・実行分離</strong>を組み合わせよう。</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- スライド 6: 設定ファイルの階層と場所 -->
-  <section>
-    <h2>設定ファイルの階層と場所</h2>
-    <div class="content">
-      <p class="lead-sm">Claude Codeの設定は4つの階層がある。上位の設定が優先される。</p>
-      <table class="table-md">
-        <thead>
-          <tr>
-            <th>設定スコープ</th>
-            <th>ファイルの場所</th>
-            <th class="td-center" style="width: 10%;">優先順位</th>
-            <th>用途</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="row-alt">
-            <td class="td-label-plain">Managed（管理）</td>
-            <td><code>/etc/claude-code/managed-settings.json</code></td>
-            <td class="td-priority-high">1（最高）</td>
-            <td>組織全体のポリシー。ユーザーが上書き不可</td>
-          </tr>
-          <tr>
-            <td class="td-label-plain">Local（ローカル）</td>
-            <td><code>.claude/settings.local.json</code></td>
-            <td class="td-center">2</td>
-            <td>個人のプロジェクト固有設定（gitignore推奨）</td>
-          </tr>
-          <tr class="row-alt">
-            <td class="td-label-plain">Project（プロジェクト）</td>
-            <td><code>.claude/settings.json</code></td>
-            <td class="td-center">3</td>
-            <td>チーム共有設定。Gitで管理</td>
-          </tr>
-          <tr>
-            <td class="td-label-plain">User（ユーザー）</td>
-            <td><code>~/.claude/settings.json</code></td>
-            <td class="td-center">4（最低）</td>
-            <td>全プロジェクト共通のグローバル設定</td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="callout-green">
-        <p>
-          <strong>新入社員へのおすすめ：</strong>まずは <code>~/.claude/settings.json</code>（User設定）に<br>permissions.denyを書いておけば、全プロジェクトに適用される。
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- スライド 7: Q3 — サンドボックスの仕組み -->
-  <section>
-    <h2>Q3. サンドボックスって何？どう使うの？</h2>
-    <div class="content">
-      <div class="grid-2col-md">
-        <div>
-          <h3>有効化の方法</h3>
-          <pre><code class="language-bash"># 必要なパッケージをインストール
-sudo apt-get install bubblewrap socat
-
-# Claude Code内でメニューから有効化
-# → /sandbox コマンドで設定メニューを開く
-# または settings.json で設定</code></pre>
-          <h3 style="margin-top: 16px;">制限される範囲</h3>
-          <ul class="list-lg">
-            <li><strong>ファイルシステム：</strong>書き込みは作業ディレクトリのみ</li>
-            <li><strong>ネットワーク：</strong>全外向き接続がプロキシ経由、許可ドメインのみ通信可</li>
-          </ul>
-        </div>
-        <div>
-          <h3>サンドボックスの対象範囲</h3>
-          <div class="info-card-navy">
-            <p>
-              サンドボックスは主に<strong>Bashツール経由の実行</strong>をOSレベルで封じ込めるもの。
-            </p>
-          </div>
-          <div class="callout-orange">
-            <p>
-              <strong>注意：</strong>Read / Edit / Write などClaude Codeの<strong>組み込みツールはサンドボックスを経由しない</strong>（permissions設定で制御）。
-            </p>
-          </div>
-          <div class="callout-green">
-            <p>
-              <strong>最も効果的な組み合わせ：</strong><br>
-              permissions.deny（組み込みツール制御）<br>
-              + サンドボックス（Bash制御）
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- スライド 8: 間接リーク対策 — Hooks と CLAUDE.md -->
-  <section>
-    <h2>Q3.5 出力経由の間接リークを防ぐには？</h2>
-    <div class="content">
-      <p class="lead-sm">サンドボックスやdenyで直接アクセスを防いでも、<strong>スクリプトの実行結果（stdout）経由でClaudeが機密データを見てしまう</strong>問題がある。</p>
-      <div class="grid-2col-md">
-        <div>
-          <h3>対策①: PreToolUse Hooksで実行前検閲</h3>
-          <pre><code class="language-json">// settings.json
-{
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash .claude/hooks/block-sensitive-output.sh"
-          }
-        ]
-      }
-    ]
-  }
-}</code></pre>
-          <p>フックスクリプトで <code>df.head()</code> や <code>print(df)</code> 等のパターンを含むコマンドを<strong>実行前にブロック</strong>できる。</p>
-        </div>
-        <div>
-          <h3>対策②: CLAUDE.mdでルール化</h3>
-          <pre><code class="language-markdown"># CLAUDE.md に記載
-## データ分析ルール
-- 分析結果はoutput/に
-  ファイル出力すること
-- print()で機密データを
-  標準出力に出さないこと
-- 結果確認は
-  「output/result.csvに書き出しました」
-  と報告するだけにすること</code></pre>
-          <div class="callout-yellow" style="margin-top: 12px;">
-            <p>
-              <strong>注意：</strong>CLAUDE.mdはプロンプトレベルの防御。通常利用には実用的だが、完全な保証はない。
-            </p>
-          </div>
-          <div class="callout-green">
-            <p>
-              <strong>機密性が高い場合の鉄則：</strong><br>
-              コードだけ書かせて<strong>実行は別ターミナル</strong>で行う（方法②）。これが唯一の完全な対策。
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- スライド 9: Q4 — 他ユーザーのファイルやOS領域へのアクセス -->
-  <section>
-    <h2>Q4. 他の人のファイルやOS領域は読まれない？</h2>
+    <h2>OS権限と他ユーザーのファイル</h2>
     <div class="content">
       <p class="lead-sm">Claude Codeは実行ユーザーの権限で動作する。Linuxのファイルパーミッションがそのまま適用される。</p>
       <div class="grid-2col-md">
@@ -410,7 +136,262 @@ sudo apt-get install bubblewrap socat
     </div>
   </section>
 
-  <!-- スライド 9: 資格情報を安全に管理する — direnv -->
+  <!-- スライド 5: 設定ファイルの階層と場所 -->
+  <section>
+    <h2>設定ファイルの階層と場所</h2>
+    <div class="content">
+      <p class="lead-sm">Claude Codeの設定は4つの階層がある。上位の設定が優先される。</p>
+      <table class="table-md">
+        <thead>
+          <tr>
+            <th>設定スコープ</th>
+            <th>ファイルの場所</th>
+            <th class="td-center" style="width: 10%;">優先順位</th>
+            <th>用途</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="row-alt">
+            <td class="td-label-plain">Managed（管理）</td>
+            <td><code>/etc/claude-code/managed-settings.json</code></td>
+            <td class="td-priority-high">1（最高）</td>
+            <td>組織全体のポリシー。ユーザーが上書き不可</td>
+          </tr>
+          <tr>
+            <td class="td-label-plain">Local（ローカル）</td>
+            <td><code>.claude/settings.local.json</code></td>
+            <td class="td-center">2</td>
+            <td>個人のプロジェクト固有設定（gitignore推奨）</td>
+          </tr>
+          <tr class="row-alt">
+            <td class="td-label-plain">Project（プロジェクト）</td>
+            <td><code>.claude/settings.json</code></td>
+            <td class="td-center">3</td>
+            <td>チーム共有設定。Gitで管理</td>
+          </tr>
+          <tr>
+            <td class="td-label-plain">User（ユーザー）</td>
+            <td><code>~/.claude/settings.json</code></td>
+            <td class="td-center">4（最低）</td>
+            <td>全プロジェクト共通のグローバル設定</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="callout-green">
+        <p>
+          <strong>新入社員へのおすすめ：</strong>まずは <code>~/.claude/settings.json</code>（User設定）に<br>permissions.denyを書いておけば、全プロジェクトに適用される。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- スライド 6: 見せたくないファイルの守り方 -->
+  <section>
+    <h2>見せたくないファイルの守り方</h2>
+    <div class="content">
+      <p class="lead-sm">例：Pythonで解析が必要だが、Claude Codeには中身を見せたくないCSVがある。</p>
+      <div class="grid-2col-md">
+        <div>
+          <h3>方法①: permissions.denyでブロック</h3>
+          <pre><code class="language-json">{
+  "permissions": {
+    "deny": [
+      "Read(data/sensitive/*.csv)",
+      "Bash(cat *sensitive*)",
+      "Bash(head *sensitive*)"
+    ]
+  }
+}</code></pre>
+          <p>Claude Codeがファイルを直接読めなくなる。スクリプト作成の支援は引き続き可能。</p>
+        </div>
+        <div>
+          <h3>方法②: コードだけ書かせて実行は自分で</h3>
+          <div class="info-card">
+            <p>
+              カラム名などの<strong>構造情報だけ</strong>Claude Codeに伝えてスクリプトを作成してもらい、<strong>実行は別ターミナルで手動で行う</strong>。最もシンプルかつ確実。
+            </p>
+          </div>
+          <div class="callout-orange">
+            <p>
+              <strong>なぜ方法②が重要か：</strong>deny設定でファイルの直接読み取りを防いでも、Claudeがスクリプトを実行すると<strong>標準出力経由で機密データを見てしまう</strong>（例：<code>df.head()</code>の結果）。実行を分離すれば<strong>この間接リークを完全に防げる</strong>。
+            </p>
+          </div>
+          <h3 style="margin-top: 16px;">状況別おすすめ</h3>
+          <table class="table-md">
+            <tbody>
+              <tr class="row-alt">
+                <td class="td-label-plain">手軽にやりたい</td>
+                <td>deny設定 + 実行は自分で</td>
+              </tr>
+              <tr>
+                <td class="td-label-plain">組織でルール化</td>
+                <td>deny + ディレクトリ分離</td>
+              </tr>
+              <tr class="row-alt">
+                <td class="td-label-plain">機密性が非常に高い</td>
+                <td>サンドボックス（後述）</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- スライド 7: permissions.denyの迂回リスク -->
+  <section>
+    <h2>permissions.denyの迂回リスク</h2>
+    <div class="content">
+      <p class="lead-sm">結論：<strong>設定の仕方次第では迂回されうる。</strong></p>
+      <div class="grid-2col-md">
+        <div>
+          <h3>迂回の具体例</h3>
+          <div class="callout-red">
+            <p><code>Read(~/.ssh/*)</code> をdenyしても…</p>
+          </div>
+          <pre><code class="language-bash"># これらはBashツール経由なので別途ブロックが必要
+cat ~/.ssh/id_rsa
+python3 -c "print(open('/home/user/.ssh/id_rsa').read())"</code></pre>
+          <p>Readツールのdenyは<strong>Claude Codeの組み込みツールだけ</strong>を制限する。Bash経由のアクセスは別途denyが必要。</p>
+        </div>
+        <div>
+          <h3>対策の比較</h3>
+          <table class="table-md">
+            <thead>
+              <tr>
+                <th>対策</th>
+                <th>迂回リスク</th>
+                <th>手軽さ</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="row-alt">
+                <td class="td-label-plain">permissions.deny</td>
+                <td>パターン漏れの可能性あり</td>
+                <td>簡単</td>
+              </tr>
+              <tr>
+                <td class="td-label-plain">サンドボックス</td>
+                <td>非常に低い（カーネルレベル）</td>
+                <td>簡単</td>
+              </tr>
+              <tr class="row-alt">
+                <td class="td-label-plain">OS専用ユーザー</td>
+                <td>非常に低い</td>
+                <td>やや手間</td>
+              </tr>
+              <tr>
+                <td class="td-label-plain">Docker隔離</td>
+                <td>ほぼゼロ</td>
+                <td>初期構築に手間</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="callout-orange">
+            <p>permissions.denyは<strong>第一の防御線</strong>。確実な保護にはサンドボックスやOSレベルの隔離を組み合わせよう。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- スライド 8: サンドボックス -->
+  <section>
+    <h2>サンドボックス — 迂回への根本対策</h2>
+    <div class="content">
+      <div class="grid-2col-md">
+        <div>
+          <h3>有効化の方法</h3>
+          <pre><code class="language-bash"># 必要なパッケージをインストール
+sudo apt-get install bubblewrap socat
+
+# Claude Code内でメニューから有効化
+# → /sandbox コマンドで設定メニューを開く
+# または settings.json で設定</code></pre>
+          <h3 style="margin-top: 16px;">制限される範囲</h3>
+          <ul class="list-lg">
+            <li><strong>ファイルシステム：</strong>書き込みは作業ディレクトリのみ</li>
+            <li><strong>ネットワーク：</strong>全外向き接続がプロキシ経由、許可ドメインのみ通信可</li>
+          </ul>
+        </div>
+        <div>
+          <h3>サンドボックスの対象範囲</h3>
+          <div class="info-card-navy">
+            <p>
+              サンドボックスは主に<strong>Bashツール経由の実行</strong>をOSレベルで封じ込めるもの。
+            </p>
+          </div>
+          <div class="callout-orange">
+            <p>
+              <strong>注意：</strong>Read / Edit / Write などClaude Codeの<strong>組み込みツールはサンドボックスを経由しない</strong>（permissions設定で制御）。
+            </p>
+          </div>
+          <div class="callout-green">
+            <p>
+              <strong>最も効果的な組み合わせ：</strong><br>
+              permissions.deny（組み込みツール制御）<br>
+              + サンドボックス（Bash制御）
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- スライド 9: 間接リーク対策 -->
+  <section>
+    <h2>間接リーク対策 — 出力経由の漏洩を防ぐ</h2>
+    <div class="content">
+      <p class="lead-sm">サンドボックスやdenyで直接アクセスを防いでも、<strong>スクリプトの実行結果（stdout）経由でClaudeが機密データを見てしまう</strong>問題がある。</p>
+      <div class="grid-2col-md">
+        <div>
+          <h3>対策①: PreToolUse Hooksで実行前検閲</h3>
+          <pre><code class="language-json">// settings.json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/block-sensitive-output.sh"
+          }
+        ]
+      }
+    ]
+  }
+}</code></pre>
+          <p>フックスクリプトで <code>df.head()</code> や <code>print(df)</code> 等のパターンを含むコマンドを<strong>実行前にブロック</strong>できる。</p>
+        </div>
+        <div>
+          <h3>対策②: CLAUDE.mdでルール化</h3>
+          <pre><code class="language-markdown"># CLAUDE.md に記載
+## データ分析ルール
+- 分析結果はoutput/に
+  ファイル出力すること
+- print()で機密データを
+  標準出力に出さないこと
+- 結果確認は
+  「output/result.csvに書き出しました」
+  と報告するだけにすること</code></pre>
+          <div class="callout-yellow" style="margin-top: 12px;">
+            <p>
+              <strong>注意：</strong>CLAUDE.mdはプロンプトレベルの防御。通常利用には実用的だが、完全な保証はない。
+            </p>
+          </div>
+          <div class="callout-green">
+            <p>
+              <strong>機密性が高い場合の鉄則：</strong><br>
+              コードだけ書かせて<strong>実行は別ターミナル</strong>で行う。これが唯一の完全な対策。
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- スライド 10: APIキー管理① direnv -->
   <section>
     <h2>APIキーの安全な管理① — direnv</h2>
     <div class="content">
@@ -454,7 +435,7 @@ git config --global core.excludesfile \
     </div>
   </section>
 
-  <!-- スライド 10: 資格情報を安全に管理する — secret-tool -->
+  <!-- スライド 11: APIキー管理② secret-tool -->
   <section>
     <h2>APIキーの安全な管理② — secret-tool</h2>
     <div class="content">
@@ -494,7 +475,7 @@ export ANTHROPIC_API_KEY=$( \
     </div>
   </section>
 
-  <!-- スライド 11: コミット前の最終防波堤 — Gitleaks -->
+  <!-- スライド 12: Gitleaks -->
   <section>
     <h2>コミット前の最終防波堤 — Gitleaks</h2>
     <div class="content">
@@ -534,7 +515,7 @@ repos:
     </div>
   </section>
 
-  <!-- スライド 12: まとめ -->
+  <!-- スライド 13: まとめ -->
   <section>
     <h2>まとめ — 今日から実践する4つのこと</h2>
     <div class="content">
