@@ -1,5 +1,9 @@
 <div class="slides">
 
+  <!-- ======================================== -->
+  <!-- 第1部: 導入 -->
+  <!-- ======================================== -->
+
   <!-- スライド 1: タイトル -->
   <section class="section-divider">
     <h1>Claude Codeを<br>安全に使うための<br>セキュリティ基礎</h1>
@@ -79,7 +83,11 @@
     </div>
   </section>
 
-  <!-- スライド 3: 基本アクセス権限 -->
+  <!-- ======================================== -->
+  <!-- 第2部: 理解編 — Claude Codeの能力と限界 -->
+  <!-- ======================================== -->
+
+  <!-- スライド 4: 基本アクセス権限 -->
   <section>
     <h2>Claude Codeの基本的なアクセス権限</h2>
     <div class="content">
@@ -119,7 +127,7 @@
     </div>
   </section>
 
-  <!-- スライド 4: OS権限と他ユーザーのファイル -->
+  <!-- スライド 5: OS権限と他ユーザーのファイル -->
   <section>
     <h2>OS権限と他ユーザーのファイル</h2>
     <div class="content">
@@ -160,21 +168,25 @@
           </table>
         </div>
         <div>
-          <h3>一括で制限する方法</h3>
-          <ul class="list-lg">
-            <li><strong>Docker：</strong>プロジェクトディレクトリだけマウントし、<code>~/.ssh</code> や <code>/etc</code> はコンテナ内に存在させない</li>
-            <li><strong>専用ユーザー：</strong>Claude Code実行用ユーザーを作成し、機密ファイルへのアクセス権をOS側で剥奪</li>
-            <li><strong>サンドボックスのdenyRead：</strong><code>sandbox.filesystem.denyRead</code> で機密パスを列挙</li>
-          </ul>
-          <div class="callout-green">
-            <p>おすすめ：<strong>サンドボックスを常時ON</strong>にしておくのがバランスが良い。一度設定すれば毎回の手間はない。</p>
+          <h3>ポイント</h3>
+          <div class="callout-yellow">
+            <p>
+              <strong>OSのパーミッションはClaude Codeにも適用される。</strong><br>
+              他ユーザーのファイルやroot専用ファイルは読めない。
+            </p>
+          </div>
+          <div class="info-card" style="margin-top: 16px;">
+            <p>
+              ただし<strong>自分が読めるファイルはすべて読める</strong>ことに変わりはない。<br>
+              機密ファイルを守るには追加の対策が必要。
+            </p>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- スライド 5: 設定ファイルの階層と場所 -->
+  <!-- スライド 6: 設定ファイルの階層と場所 -->
   <section>
     <h2>設定ファイルの階層と場所</h2>
     <div class="content">
@@ -223,14 +235,18 @@
     </div>
   </section>
 
-  <!-- スライド 6: 見せたくないファイルの守り方 -->
+  <!-- ======================================== -->
+  <!-- 第3部: 対策編① — 直接アクセスの制御 -->
+  <!-- ======================================== -->
+
+  <!-- スライド 7: 見せたくないファイルの守り方 -->
   <section>
     <h2>見せたくないファイルの守り方</h2>
     <div class="content">
       <p class="lead-sm">例：Pythonで解析が必要だが、Claude Codeには中身を見せたくないCSVがある。</p>
       <div class="grid-2col-md">
         <div>
-          <h3>方法①: permissions.denyでブロック</h3>
+          <h3>方法: permissions.denyでブロック</h3>
           <pre><code class="language-json">{
   "permissions": {
     "deny": [
@@ -243,40 +259,24 @@
           <p>Claude Codeがファイルを直接読めなくなる。スクリプト作成の支援は引き続き可能。</p>
         </div>
         <div>
-          <h3>方法②: コードだけ書かせて実行は自分で</h3>
-          <div class="info-card">
+          <h3>deny設定のポイント</h3>
+          <ul class="list-lg">
+            <li>Readツールだけでなく<strong>Bash経由のアクセス</strong>も考慮する</li>
+            <li><code>cat</code>, <code>head</code>, <code>grep</code> なども必要に応じてブロック</li>
+            <li>パターン漏れがあると迂回される可能性あり</li>
+          </ul>
+          <div class="callout-yellow" style="margin-top: 16px;">
             <p>
-              カラム名などの<strong>構造情報だけ</strong>Claude Codeに伝えてスクリプトを作成してもらい、<strong>実行は別ターミナルで手動で行う</strong>。最もシンプルかつ確実。
+              <strong>注意：</strong>permissions.denyは「第一の防御線」。<br>
+              完全な保護には次のスライドで紹介する追加対策が必要。
             </p>
           </div>
-          <div class="callout-orange">
-            <p>
-              <strong>なぜ方法②が重要か：</strong>deny設定でファイルの直接読み取りを防いでも、Claudeがスクリプトを実行すると<strong>標準出力経由で機密データを見てしまう</strong>（例：<code>df.head()</code>の結果）。実行を分離すれば<strong>この間接リークを完全に防げる</strong>。
-            </p>
-          </div>
-          <h3 style="margin-top: 16px;">状況別おすすめ</h3>
-          <table class="table-md">
-            <tbody>
-              <tr class="row-alt">
-                <td class="td-label-plain">手軽にやりたい</td>
-                <td>deny設定 + 実行は自分で</td>
-              </tr>
-              <tr>
-                <td class="td-label-plain">組織でルール化</td>
-                <td>deny + ディレクトリ分離</td>
-              </tr>
-              <tr class="row-alt">
-                <td class="td-label-plain">機密性が非常に高い</td>
-                <td>サンドボックス（後述）</td>
-              </tr>
-            </tbody>
-          </table>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- スライド 7: permissions.denyの迂回リスク -->
+  <!-- スライド 8: permissions.denyの迂回リスク -->
   <section>
     <h2>permissions.denyの迂回リスク</h2>
     <div class="content">
@@ -333,7 +333,7 @@ python3 -c "print(open('/home/user/.ssh/id_rsa').read())"</code></pre>
     </div>
   </section>
 
-  <!-- スライド 8: サンドボックス -->
+  <!-- スライド 9: サンドボックス -->
   <section>
     <h2>サンドボックス — 迂回への根本対策</h2>
     <div class="content">
@@ -376,7 +376,11 @@ sudo apt-get install bubblewrap socat
     </div>
   </section>
 
-  <!-- スライド 9: 間接リーク対策 -->
+  <!-- ======================================== -->
+  <!-- 第4部: 対策編② — 間接リークの制御 -->
+  <!-- ======================================== -->
+
+  <!-- スライド 10: 間接リーク対策 -->
   <section>
     <h2>間接リーク対策 — 出力経由の漏洩を防ぐ</h2>
     <div class="content">
@@ -418,10 +422,49 @@ sudo apt-get install bubblewrap socat
               <strong>注意：</strong>CLAUDE.mdはプロンプトレベルの防御。通常利用には実用的だが、完全な保証はない。
             </p>
           </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- スライド 11: 最も確実な間接リーク対策 -->
+  <section>
+    <h2>最も確実な間接リーク対策</h2>
+    <div class="content">
+      <p class="lead">機密性が高い場合の鉄則：<strong>コードだけ書かせて、実行は別ターミナルで行う</strong></p>
+      <div class="grid-2col">
+        <div>
+          <h3>なぜこれが最強なのか</h3>
           <div class="callout-green">
             <p>
-              <strong>機密性が高い場合の鉄則：</strong><br>
-              コードだけ書かせて<strong>実行は別ターミナル</strong>で行う。これが唯一の完全な対策。
+              deny設定でファイルの直接読み取りを防いでも、Claudeがスクリプトを実行すると<strong>標準出力経由で機密データを見てしまう</strong>（例：<code>df.head()</code>の結果）。
+            </p>
+          </div>
+          <p style="margin-top: 16px;">
+            実行を分離すれば、<strong>どんな設定漏れがあっても機密データがClaudeに渡らない</strong>。これが唯一の完全な対策。
+          </p>
+        </div>
+        <div>
+          <h3>状況別おすすめ</h3>
+          <table class="table-md">
+            <tbody>
+              <tr class="row-alt">
+                <td class="td-label-plain">通常の開発</td>
+                <td>deny設定 + サンドボックス</td>
+              </tr>
+              <tr>
+                <td class="td-label-plain">機密データの分析</td>
+                <td>deny + Hooks + CLAUDE.md</td>
+              </tr>
+              <tr class="row-alt">
+                <td class="td-label-plain">機密性が非常に高い</td>
+                <td><strong>コードだけ書かせて実行は別ターミナル</strong></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="info-card" style="margin-top: 16px;">
+            <p>
+              Claude Codeには<strong>構造情報だけ</strong>（カラム名など）を伝えてスクリプトを作成してもらい、実行は手動で。最もシンプルかつ確実。
             </p>
           </div>
         </div>
@@ -429,7 +472,11 @@ sudo apt-get install bubblewrap socat
     </div>
   </section>
 
-  <!-- スライド 10: APIキー管理① direnv -->
+  <!-- ======================================== -->
+  <!-- 第5部: 実践編 — APIキー管理とGit対策 -->
+  <!-- ======================================== -->
+
+  <!-- スライド 12: APIキー管理① direnv -->
   <section>
     <h2>APIキーの安全な管理① — direnv</h2>
     <div class="content">
@@ -473,7 +520,7 @@ git config --global core.excludesfile \
     </div>
   </section>
 
-  <!-- スライド 11: APIキー管理② secret-tool -->
+  <!-- スライド 13: APIキー管理② secret-tool -->
   <section>
     <h2>APIキーの安全な管理② — secret-tool</h2>
     <div class="content">
@@ -513,7 +560,7 @@ export ANTHROPIC_API_KEY=$( \
     </div>
   </section>
 
-  <!-- スライド 12: Gitleaks -->
+  <!-- スライド 14: Gitleaks -->
   <section>
     <h2>コミット前の最終防波堤 — Gitleaks</h2>
     <div class="content">
@@ -553,7 +600,11 @@ repos:
     </div>
   </section>
 
-  <!-- スライド 13: まとめ -->
+  <!-- ======================================== -->
+  <!-- 第6部: まとめ -->
+  <!-- ======================================== -->
+
+  <!-- スライド 15: まとめ -->
   <section>
     <h2>まとめ — 今日から実践する4つのこと</h2>
     <div class="content">
