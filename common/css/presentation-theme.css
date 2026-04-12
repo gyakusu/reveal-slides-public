@@ -260,10 +260,18 @@
     background-color: var(--nsk-navy);
     border-top: 3px solid var(--nsk-red);
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
     padding: 0 3vw;
     z-index: 999;
+}
+
+.reveal-footer .copyright {
+    font-size: 1.4vh;
+    color: var(--nsk-white);
+    font-family: "Noto Sans JP", sans-serif;
+    font-weight: 400;
+    white-space: nowrap;
 }
 
 .reveal-footer .page-number {
@@ -696,6 +704,274 @@
     font-size: 28pt;
     font-weight: 700;
     color: var(--nsk-red);
+}
+
+/* ================================================================
+   リード文（サブタイトル）
+   ================================================================ */
+.lead {
+    font-size: 20pt;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.lead-sm {
+    font-size: 20pt;
+    color: #555;
+    margin-bottom: 16px;
+}
+
+/* ================================================================
+   グリッドレイアウト
+   ================================================================ */
+.grid-2col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 36px;
+    align-items: start;
+}
+
+.grid-2col-sm {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    align-items: start;
+}
+
+.grid-2col-md {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    align-items: start;
+}
+
+.grid-3col {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+.grid-4col {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+/* ================================================================
+   情報カード
+   ================================================================ */
+.info-card {
+    background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%);
+    padding: 20px 24px;
+    border-radius: 10px;
+    border-left: 5px solid var(--nsk-red);
+}
+
+.info-card h3 {
+    margin-top: 0;
+}
+
+.info-card p {
+    font-size: 18pt;
+    line-height: 1.6;
+    color: #444;
+}
+
+.info-card-navy {
+    background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%);
+    padding: 20px 24px;
+    border-radius: 10px;
+    border-left: 5px solid var(--nsk-navy);
+    margin-bottom: 16px;
+}
+
+.info-card-navy p {
+    font-size: 19pt;
+    line-height: 1.7;
+    color: #333;
+}
+
+.summary-card {
+    background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%);
+    padding: 20px 22px;
+    border-radius: 10px;
+    border-left: 6px solid var(--nsk-red);
+}
+
+.summary-card h3 {
+    margin-top: 0;
+    font-size: 19pt;
+    color: var(--nsk-red);
+}
+
+.summary-card p {
+    font-size: 17pt;
+    line-height: 1.6;
+    color: #333;
+}
+
+/* ================================================================
+   コールアウトボックス
+   ================================================================ */
+.callout-yellow {
+    background: #FFF8E1;
+    padding: 20px 28px;
+    border-radius: 8px;
+    border-left: 5px solid #F59E0B;
+}
+
+.callout-yellow p {
+    font-size: 19pt;
+    line-height: 1.7;
+    margin: 0;
+    color: #333;
+}
+
+.callout-yellow-sm {
+    background: #FFF8E1;
+    padding: 16px 22px;
+    border-radius: 8px;
+    border-left: 5px solid #F59E0B;
+}
+
+.callout-yellow-sm p {
+    font-size: 19pt;
+    margin: 0;
+    line-height: 1.7;
+    color: #333;
+}
+
+.callout-amber {
+    background: #FFF3CD;
+    padding: 20px 24px;
+    border-radius: 8px;
+    border-left: 5px solid #F59E0B;
+    margin-bottom: 16px;
+}
+
+.callout-amber p {
+    font-size: 19pt;
+    line-height: 1.7;
+    margin: 0;
+    color: #333;
+}
+
+.callout-red {
+    background: #FFEBEE;
+    padding: 14px 18px;
+    border-radius: 6px;
+    border-left: 4px solid #e74c3c;
+    margin-top: 16px;
+}
+
+.callout-red p {
+    font-size: 18pt;
+    margin: 0;
+    color: #333;
+}
+
+.callout-orange {
+    background: #FFF3E0;
+    padding: 14px 18px;
+    border-radius: 6px;
+    border-left: 4px solid #e67e22;
+    margin-top: 16px;
+}
+
+.callout-orange p {
+    font-size: 18pt;
+    margin: 0;
+    color: #333;
+}
+
+.callout-green {
+    background: #E8F5E9;
+    padding: 14px 18px;
+    border-radius: 6px;
+    border-left: 4px solid #27ae60;
+    margin-top: 16px;
+}
+
+.callout-green p {
+    font-size: 18pt;
+    margin: 0;
+    color: #333;
+}
+
+/* ================================================================
+   リスト拡張
+   ================================================================ */
+.list-lg {
+    font-size: 19pt;
+    line-height: 2.0;
+}
+
+/* ================================================================
+   テーブル拡張
+   ================================================================ */
+.table-lg {
+    font-size: 18pt;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-md {
+    font-size: 17pt;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-lg th,
+.table-md th {
+    padding: 14px 20px;
+    text-align: left;
+    background: var(--nsk-navy);
+    color: white;
+}
+
+.table-md th {
+    padding: 12px 18px;
+}
+
+.table-lg td {
+    padding: 14px 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+.table-md td {
+    padding: 12px 18px;
+    border-bottom: 1px solid #ddd;
+}
+
+.table-lg tr.row-alt,
+.table-md tr.row-alt {
+    background: #f5f7fa;
+}
+
+.table-lg tr:last-child td,
+.table-md tr:last-child td {
+    border-bottom: none;
+}
+
+.td-label {
+    font-weight: 600;
+    color: var(--nsk-red);
+}
+
+.td-label-plain {
+    font-weight: 600;
+}
+
+.td-priority-high {
+    text-align: center;
+    color: var(--nsk-red);
+    font-weight: 600;
+}
+
+.td-center {
+    text-align: center;
 }
 
 /* ================================================================

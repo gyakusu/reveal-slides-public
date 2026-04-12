@@ -1,184 +1,138 @@
 <div class="slides">
 
   <!-- ======================================== -->
-  <!-- 第1部: 導入 -->
+  <!-- Opening -->
   <!-- ======================================== -->
 
   <!-- スライド 1: タイトル -->
   <section class="section-divider">
-    <h1>Claude Codeを<br>安全に使うための<br>セキュリティ基礎</h1>
+    <h1>知識は繋がって<br>初めて価値を生む</h1>
     <p style="font-size: 22pt; color: var(--nsk-navy); margin-top: 16px;">
-      新入社員向け — Ubuntu環境でのセキュアな運用
+      SharePoint × Obsidian ではじめる社内 Wiki
+    </p>
+    <p style="font-size: 16pt; color: var(--nsk-gray); margin-top: 8px;">
+      対象: SharePoint を業務で使っているエンジニア・技術者
     </p>
   </section>
 
-  <!-- スライド 2: なぜこの研修が必要か -->
-  <section>
-    <h2>なぜこの研修が必要か</h2>
-    <div class="content">
-      <p class="lead">Claude Codeから機密情報が漏れるとしたら、どの経路か？</p>
-      <div class="grid-2col">
-        <div>
-          <h3>リスク大：Gitリポジトリ経由</h3>
-          <div class="callout-red">
-            <p>
-              APIキーや機密ファイルが<strong>GitHubにpush</strong>されると、<br>
-              自動クローラーが数分で検出・悪用する。<br>
-              <strong>履歴に残るので削除も困難。</strong>
-            </p>
-          </div>
-        </div>
-        <div>
-          <h3>リスク小：会話データの漏洩</h3>
-          <div class="callout-yellow">
-            <p>
-              Claude TeamsやClaude Proでは<br>
-              <strong>会話データはモデル学習に使用されない</strong>。<br>
-              規約上のリスクは限定的。
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="callout-green">
-        <p>
-          <strong>それでも「念のための対策」が必要な理由：</strong><br>
-          規約は変わりうる。Claude Codeは手元のファイルを広く読める。<br>
-          「見せなくていいものは見せない」習慣が、将来のリスクを防ぐ。
-        </p>
-      </div>
-    </div>
-  </section>
+  <!-- ======================================== -->
+  <!-- Why — なぜ既存ツールではダメか（2〜5枚） -->
+  <!-- ======================================== -->
 
-  <!-- スライド 3: この研修で学ぶこと -->
+  <!-- スライド 2: 既存ツールの課題 -->
   <section>
-    <h2>この研修で学ぶこと</h2>
+    <h2>既存ツールの課題 — "ありがち" な困りごと</h2>
     <div class="content">
-      <p class="lead">Git経由の漏洩を防ぐために、具体的な設定と運用を学ぶ。</p>
+      <p class="lead">ドキュメントは書いている。でも「あの情報」が見つからない。</p>
       <div class="grid-2col">
         <div>
-          <h3>今日のテーマ</h3>
           <ul class="list-lg">
-            <li>Claude Codeは何を読めて、何ができるのか？</li>
-            <li>見せたくないファイルをどう守るか？</li>
-            <li>設定だけで本当に安全か？迂回されないか？</li>
-            <li>APIキーやパスワードの正しい管理方法</li>
+            <li>「Loopに書いたはず」→ 検索しても出てこない</li>
+            <li>「去年のトラブル対応、誰かまとめてたよな」→ バラバラで全体像が掴めない</li>
+            <li>「オンボーディング資料を作ろう」→ 既存ドキュメントを探すたびに挫折</li>
           </ul>
         </div>
         <div>
-          <h3>ゴール</h3>
-          <div class="info-card">
+          <div class="callout-orange">
             <p>
-              研修後すぐに<strong>自分の環境で実践できる</strong>セキュリティ設定を身につける。<br>
-              難しい理論より「具体的に何をすればいいか」を重視します。
+              <strong>問題の本質:</strong><br>
+              情報が「ない」のではなく、<br>
+              情報が<strong>「点在している」</strong>。<br>
+              書いた本人すら再発見できない<br>
+              「知識のブラックホール」状態。
             </p>
           </div>
-          <div class="callout-yellow" style="margin-top: 16px;">
-            <p>
-              <strong>前提：</strong>Claude Teams/Proを使用し、<br>
-              会話データの学習利用はOFFになっていること。
-            </p>
+          <div class="info-card" style="margin-top: 16px;">
+            <p>書き方そのものを変える必要がある。<br>バラバラなドキュメントを<strong>「繋げる」仕組み</strong>が必要。</p>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ======================================== -->
-  <!-- 第2部: 理解編 — Claude Codeの能力と限界 -->
-  <!-- ======================================== -->
-
-  <!-- スライド 4: 基本アクセス権限 -->
+  <!-- スライド 3: なぜ Microsoft Loop ではダメか -->
   <section>
-    <h2>Claude Codeの基本的なアクセス権限</h2>
+    <h2>なぜ Microsoft Loop ではダメか</h2>
     <div class="content">
-      <p class="lead">まず「Claude Codeに何ができるのか」を正確に理解しよう。</p>
+      <p class="lead">Loop はコラボツールとして優秀。でも「知識の蓄積」には構造的に向いていない。</p>
       <table class="table-lg">
         <thead>
           <tr>
-            <th style="width: 20%;">操作</th>
-            <th style="width: 40%;">範囲</th>
-            <th>補足</th>
+            <th style="width: 35%;">課題</th>
+            <th>詳細</th>
           </tr>
         </thead>
         <tbody>
           <tr class="row-alt">
-            <td class="td-label">書き込み</td>
-            <td>作業ディレクトリとそのサブディレクトリのみ</td>
-            <td>プロジェクト外への書き込みは不可</td>
+            <td class="td-label">タグ付けができない</td>
+            <td>ラベルによる横断的な分類・絞り込みが不可能</td>
           </tr>
           <tr>
-            <td class="td-label">読み取り</td>
-            <td><strong>制限なし</strong>（プロジェクト外も読める）</td>
-            <td><code>~/.ssh</code> や <code>~/.aws</code> も読める</td>
+            <td class="td-label">動的一覧化ができない</td>
+            <td>「ドラフト一覧」「領域別の公開済み記事」をクエリで作れない</td>
           </tr>
           <tr class="row-alt">
-            <td class="td-label">Bash実行</td>
-            <td>初回はユーザー承認が必要</td>
-            <td>一度許可すると広範に実行可能</td>
+            <td class="td-label">グラフビューがない</td>
+            <td>ドキュメント同士の繋がりを可視化する手段がない</td>
+          </tr>
+          <tr>
+            <td class="td-label">アップデートが乏しい</td>
+            <td>この1年、目立った機能追加がほとんどない</td>
           </tr>
         </tbody>
       </table>
-      <div class="callout-yellow">
+      <div class="callout-yellow" style="margin-top: 20px;">
         <p>
-          <strong>大原則：自分が読めるものは、Claude Codeも全て読める。</strong><br>
-          Claude Codeは実行ユーザーの権限で動作する。特別な権限昇格はないが、制限もない。
+          <strong>誤解なく:</strong> Loop をやめるのではない。<br>
+          フロー型（議事録・リアルタイムコラボ）は Loop のまま。<br>
+          <strong>ストック型の知識資産</strong>を置く場所として別の選択肢が必要。
         </p>
       </div>
     </div>
   </section>
 
-  <!-- スライド 5: OS権限と他ユーザーのファイル -->
+  <!-- スライド 4: 目指す姿 -->
   <section>
-    <h2>OS権限と他ユーザーのファイル</h2>
+    <h2>目指す姿 — 有機的に繋がる資料</h2>
     <div class="content">
-      <p class="lead-sm">Claude Codeは実行ユーザーの権限で動作する。Linuxのファイルパーミッションがそのまま適用される。</p>
-      <div class="grid-2col-md">
+      <p class="lead">3つの価値をバランスよく取りに行く。</p>
+      <div class="grid-3col">
+        <div class="summary-card">
+          <h3>(a) 知見の再発見</h3>
+          <p>リンクとグラフビューで「あれとこれが繋がっていた」という発見が起きる。過去の自分が半年後の自分を助ける状態。</p>
+        </div>
+        <div class="summary-card">
+          <h3>(b) 暗黙知の構造化</h3>
+          <p>口頭で伝わっているだけの知識を、Markdown とフロントマターで半構造化データにする。タグ・ステータスで再利用可能に。</p>
+        </div>
+        <div class="summary-card">
+          <h3>(c) AI/LLM との相性</h3>
+          <p>Markdown はプレーンテキスト。将来 RAG で社内AIアシスタントを作るとき、最も食わせやすい形式。<strong>今書いた資産が未来のAI資産になる。</strong></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- スライド 5: なぜ Markdown か -->
+  <section>
+    <h2>なぜ Markdown か</h2>
+    <div class="content">
+      <p class="lead">プレーンテキストが一番強い。</p>
+      <div class="grid-2col">
         <div>
-          <h3>アクセス可否の具体例</h3>
-          <table class="table-md">
-            <thead>
-              <tr>
-                <th>対象</th>
-                <th>読める？</th>
-                <th>理由</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="row-alt">
-                <td><code>/home/friend/</code></td>
-                <td><strong>不可</strong></td>
-                <td>OSパーミッション（750）で拒否</td>
-              </tr>
-              <tr>
-                <td><code>~/.ssh/</code></td>
-                <td><strong>可能</strong></td>
-                <td>自分のファイルだから</td>
-              </tr>
-              <tr class="row-alt">
-                <td><code>/etc/passwd</code></td>
-                <td><strong>可能</strong></td>
-                <td>全ユーザー読み取り可（644）</td>
-              </tr>
-              <tr>
-                <td><code>/etc/shadow</code></td>
-                <td><strong>不可</strong></td>
-                <td>rootのみ（640）</td>
-              </tr>
-            </tbody>
-          </table>
+          <ul class="list-lg">
+            <li><strong>再利用性が高い</strong> — テキストエディタで開ける。<code>grep</code> で検索、<code>git diff</code> で差分</li>
+            <li><strong>ツールロックインからの解放</strong> — Obsidian をやめても <code>.md</code> ファイルはそのまま持っていける</li>
+            <li><strong>Git との親和性</strong> — バージョン管理が効く。SharePoint のバージョン履歴との二重安全網</li>
+            <li><strong>LLM との親和性</strong> — 現在の LLM が最も得意とする入力形式の1つ</li>
+          </ul>
         </div>
         <div>
-          <h3>ポイント</h3>
-          <div class="callout-yellow">
+          <div class="callout-green">
             <p>
-              <strong>OSのパーミッションはClaude Codeにも適用される。</strong><br>
-              他ユーザーのファイルやroot専用ファイルは読めない。
-            </p>
-          </div>
-          <div class="info-card" style="margin-top: 16px;">
-            <p>
-              ただし<strong>自分が読めるファイルはすべて読める</strong>ことに変わりはない。<br>
-              機密ファイルを守るには追加の対策が必要。
+              <strong>ここから How の話に入ります。</strong><br><br>
+              ここまで（Why）が 5枚。<br>
+              残り <strong>14 枚は全部「どうやるか」</strong>です。
             </p>
           </div>
         </div>
@@ -186,89 +140,103 @@
     </div>
   </section>
 
-  <!-- スライド 6: 設定ファイルの階層と場所 -->
+  <!-- ======================================== -->
+  <!-- How — セットアップ・運用 -->
+  <!-- ======================================== -->
+
+  <!-- スライド 6: 解決策アーキテクチャ -->
   <section>
-    <h2>設定ファイルの階層と場所</h2>
+    <h2>解決策アーキテクチャ — SharePoint × Obsidian</h2>
     <div class="content">
-      <p class="lead-sm">Claude Codeの設定は4つの階層がある。上位の設定が優先される。</p>
-      <table class="table-md">
-        <thead>
-          <tr>
-            <th>設定スコープ</th>
-            <th>ファイルの場所</th>
-            <th class="td-center" style="width: 10%;">優先順位</th>
-            <th>用途</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="row-alt">
-            <td class="td-label-plain">Managed（管理）</td>
-            <td><code>/etc/claude-code/managed-settings.json</code></td>
-            <td class="td-priority-high">1（最高）</td>
-            <td>組織全体のポリシー。ユーザーが上書き不可</td>
-          </tr>
-          <tr>
-            <td class="td-label-plain">Local（ローカル）</td>
-            <td><code>.claude/settings.local.json</code></td>
-            <td class="td-center">2</td>
-            <td>個人のプロジェクト固有設定（gitignore推奨）</td>
-          </tr>
-          <tr class="row-alt">
-            <td class="td-label-plain">Project（プロジェクト）</td>
-            <td><code>.claude/settings.json</code></td>
-            <td class="td-center">3</td>
-            <td>チーム共有設定。Gitで管理</td>
-          </tr>
-          <tr>
-            <td class="td-label-plain">User（ユーザー）</td>
-            <td><code>~/.claude/settings.json</code></td>
-            <td class="td-center">4（最低）</td>
-            <td>全プロジェクト共通のグローバル設定</td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="callout-green">
+      <p class="lead">SharePoint はバックエンド、Obsidian はフロントエンド。</p>
+      <div class="mermaid">
+flowchart LR
+  SP["☁️ SharePoint\n(ライブラリ)"]
+  OD["🔄 OneDrive\n(エクスプローラ同期)"]
+  VAULT["📁 Vault\n(.md ファイル群)"]
+  OB["🔷 Obsidian\n(編集・可視化)"]
+  SP -- "同期ボタン" --> OD
+  OD -- "ローカルに展開" --> VAULT
+  VAULT -- "Open folder as vault" --> OB
+  style SP fill:#0078D4,color:#fff
+  style OD fill:#0078D4,color:#fff
+  style VAULT fill:#1C2B4B,color:#fff
+  style OB fill:#7C3AED,color:#fff
+      </div>
+      <div class="grid-3col" style="margin-top: 20px;">
+        <div class="info-card">
+          <p><strong>SharePoint</strong><br>クラウド正本・同期・バックアップ・権限管理・バージョン履歴</p>
+        </div>
+        <div class="info-card">
+          <p><strong>OneDrive</strong><br>SharePoint → ローカル PC への橋渡し。エクスプローラから直接操作可</p>
+        </div>
+        <div class="info-card">
+          <p><strong>Obsidian</strong><br>編集・リンク可視化・グラフビュー・Bases クエリ。すべて無料</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- スライド 7: セットアップ概要 -->
+  <section>
+    <h2>セットアップ概要 — たった 3 ステップ</h2>
+    <div class="content">
+      <p class="lead">所要時間は 5 分。新しく構築するものは何もない。</p>
+      <div class="grid-3col">
+        <div class="summary-card">
+          <h3>① SharePoint ライブラリを選ぶ</h3>
+          <p>Wiki として使うドキュメントライブラリを決める。既存のものを流用しても、新規作成でも OK。権限管理はここで設定。</p>
+        </div>
+        <div class="summary-card">
+          <h3>② OneDrive 経由でエクスプローラ同期</h3>
+          <p>ブラウザで SharePoint を開き「同期」ボタンを押す。Windows はエクスプローラ、Mac は Finder に Vault が出現。</p>
+        </div>
+        <div class="summary-card">
+          <h3>③ Vault として開く</h3>
+          <p>Obsidian 起動 → 「Open folder as vault」で同期先フォルダを指定。これだけで完了。</p>
+        </div>
+      </div>
+      <div class="callout-yellow" style="margin-top: 20px;">
         <p>
-          <strong>新入社員へのおすすめ：</strong>まずは <code>~/.claude/settings.json</code>（User設定）に<br>permissions.denyを書いておけば、全プロジェクトに適用される。
+          <strong>注意点: <code>.obsidian</code> フォルダの扱い</strong><br>
+          Obsidian の設定ファイル群。チームで Bases 定義・プラグイン設定を揃えるなら SharePoint 同期対象に含める（推奨）。
         </p>
       </div>
     </div>
   </section>
 
-  <!-- ======================================== -->
-  <!-- 第3部: 対策編① — 直接アクセスの制御 -->
-  <!-- ======================================== -->
-
-  <!-- スライド 7: 見せたくないファイルの守り方 -->
+  <!-- スライド 8: サンプル Vault のファイル構造 -->
   <section>
-    <h2>見せたくないファイルの守り方</h2>
+    <h2>サンプル Vault のファイル構造</h2>
     <div class="content">
-      <p class="lead-sm">例：Pythonで解析が必要だが、Claude Codeには中身を見せたくないCSVがある。</p>
-      <div class="grid-2col-md">
+      <p class="lead">PARA（Projects / Areas / Resources / Archive）ベースの構成例。</p>
+      <div class="grid-2col">
         <div>
-          <h3>方法: permissions.denyでブロック</h3>
-          <pre><code class="language-json">{
-  "permissions": {
-    "deny": [
-      "Read(data/sensitive/*.csv)",
-      "Bash(cat *sensitive*)",
-      "Bash(head *sensitive*)"
-    ]
-  }
-}</code></pre>
-          <p>Claude Codeがファイルを直接読めなくなる。スクリプト作成の支援は引き続き可能。</p>
+          <pre><code class="language-bash">Vault/
+├── 00_inbox/         # とりあえず放り込む場所
+├── 10_projects/      # 進行中のプロジェクト
+│   ├── proj-alpha/
+│   └── proj-beta/
+├── 20_areas/         # 継続的に面倒を見る領域
+│   ├── infra/
+│   ├── security/
+│   └── team-ops/
+├── 30_resources/     # 参考資料・ナレッジ
+│   ├── guides/
+│   └── references/
+├── 40_archive/       # 終わったもの
+├── attachments/      # 画像・PDFなど
+└── templates/        # Templater テンプレート</code></pre>
         </div>
         <div>
-          <h3>deny設定のポイント</h3>
-          <ul class="list-lg">
-            <li>Readツールだけでなく<strong>Bash経由のアクセス</strong>も考慮する</li>
-            <li><code>cat</code>, <code>head</code>, <code>grep</code> なども必要に応じてブロック</li>
-            <li>パターン漏れがあると迂回される可能性あり</li>
-          </ul>
-          <div class="callout-yellow" style="margin-top: 16px;">
+          <div class="info-card">
+            <p><strong>番号プレフィックスの狙い</strong><br>エクスプローラ・サイドバーでの表示順を固定するため。アルファベット順だと archive が先頭に来て気持ち悪い。</p>
+          </div>
+          <div class="callout-green" style="margin-top: 16px;">
             <p>
-              <strong>注意：</strong>permissions.denyは「第一の防御線」。<br>
-              完全な保護には次のスライドで紹介する追加対策が必要。
+              <strong>ポイント:</strong> この構造は出発点。<br>
+              運用しながらチームの実態に合わせて変えていく。<br>
+              いきなり完璧を目指さない。
             </p>
           </div>
         </div>
@@ -276,324 +244,347 @@
     </div>
   </section>
 
-  <!-- スライド 8: permissions.denyの迂回リスク -->
+  <!-- スライド 9: Obsidian の基本操作 -->
   <section>
-    <h2>permissions.denyの迂回リスク</h2>
+    <h2>Obsidian の基本操作 — ライブデモ①</h2>
     <div class="content">
-      <p class="lead-sm">結論：<strong>設定の仕方次第では迂回されうる。</strong></p>
-      <div class="grid-2col-md">
+      <p class="lead">リンクで繋がり、双方向に見え、全体像がグラフで見える。</p>
+      <div class="grid-2col">
         <div>
-          <h3>迂回の具体例</h3>
-          <div class="callout-red">
-            <p><code>Read(~/.ssh/*)</code> をdenyしても…</p>
-          </div>
-          <pre><code class="language-bash"># これらはBashツール経由なので別途ブロックが必要
-cat ~/.ssh/id_rsa
-python3 -c "print(open('/home/user/.ssh/id_rsa').read())"</code></pre>
-          <p>Readツールのdenyは<strong>Claude Codeの組み込みツールだけ</strong>を制限する。Bash経由のアクセスは別途denyが必要。</p>
+          <ul class="list-lg">
+            <li><strong>ノート作成</strong> — サイドバー右クリック → 新規ノート</li>
+            <li><strong>内部リンク <code>[[...]]</code></strong> — <code>[[</code> と入力すると候補ポップアップ。存在しないノートでもリンクを先に書ける</li>
+            <li><strong>バックリンク</strong> — 右サイドバーで「どこから参照されているか」を一覧表示</li>
+            <li><strong>グラフビュー</strong> — Vault 全体のリンク関係をネットワーク図で可視化</li>
+          </ul>
         </div>
         <div>
-          <h3>対策の比較</h3>
-          <table class="table-md">
-            <thead>
-              <tr>
-                <th>対策</th>
-                <th>迂回リスク</th>
-                <th>手軽さ</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="row-alt">
-                <td class="td-label-plain">permissions.deny</td>
-                <td>パターン漏れの可能性あり</td>
-                <td>簡単</td>
-              </tr>
-              <tr>
-                <td class="td-label-plain">サンドボックス</td>
-                <td>非常に低い（カーネルレベル）</td>
-                <td>簡単</td>
-              </tr>
-              <tr class="row-alt">
-                <td class="td-label-plain">OS専用ユーザー</td>
-                <td>非常に低い</td>
-                <td>やや手間</td>
-              </tr>
-              <tr>
-                <td class="td-label-plain">Docker隔離</td>
-                <td>ほぼゼロ</td>
-                <td>初期構築に手間</td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="callout-orange">
-            <p>permissions.denyは<strong>第一の防御線</strong>。確実な保護にはサンドボックスやOSレベルの隔離を組み合わせよう。</p>
+          <!-- ダミー画像プレースホルダー（スクリーンショット差し替え） -->
+          <div style="background: #f0f0f0; border: 2px dashed #999; border-radius: 8px; height: 220px; display: flex; align-items: center; justify-content: center; color: #666; font-size: 14pt; text-align: center; padding: 16px;">
+            📸 グラフビューの<br>スクリーンショット<br>（後ほど差し替え）
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- スライド 9: サンドボックス -->
+  <!-- スライド 10: メタデータ（フロントマター）の推奨スキーマ -->
   <section>
-    <h2>サンドボックス — 迂回への根本対策</h2>
+    <h2>メタデータ（フロントマター）の推奨スキーマ</h2>
     <div class="content">
-      <div class="grid-2col-md">
+      <p class="lead">Markdown ファイル先頭に YAML でメタデータを付ける。これが Bases の燃料になる。</p>
+      <div class="grid-2col">
         <div>
-          <h3>有効化の方法</h3>
-          <pre><code class="language-bash"># 必要なパッケージをインストール
-sudo apt-get install bubblewrap socat
-
-# Claude Code内でメニューから有効化
-# → /sandbox コマンドで設定メニューを開く
-# または settings.json で設定</code></pre>
-          <h3 style="margin-top: 16px;">制限される範囲</h3>
-          <ul class="list-lg">
-            <li><strong>ファイルシステム：</strong>書き込みは作業ディレクトリのみ</li>
-            <li><strong>ネットワーク：</strong>全外向き接続がプロキシ経由、許可ドメインのみ通信可</li>
-          </ul>
+          <pre><code class="language-yaml">---
+title: ネットワーク障害対応手順 - DNS
+aliases:
+  - DNS障害対応
+  - フェイルオーバー手順
+tags:
+  - area/infra
+  - type/howto
+  - status/published
+created: 2026-03-15
+updated: 2026-04-10
+author: kususaki
+status: published
+related:
+  - "[[20_areas/infra/DNS構成]]"
+---</code></pre>
         </div>
         <div>
-          <h3>サンドボックスの対象範囲</h3>
+          <table class="table-md">
+            <thead>
+              <tr><th>フィールド</th><th>用途</th></tr>
+            </thead>
+            <tbody>
+              <tr class="row-alt"><td class="td-label">title</td><td>表示用タイトル（ファイル名と分離）</td></tr>
+              <tr><td class="td-label">aliases</td><td>別名・略称。<code>[[略称]]</code> でも解決</td></tr>
+              <tr class="row-alt"><td class="td-label">tags</td><td>階層タグで横断分類</td></tr>
+              <tr><td class="td-label">status</td><td>draft / review / published / archived</td></tr>
+              <tr class="row-alt"><td class="td-label">related</td><td>Bases クエリで引ける関連リンク</td></tr>
+            </tbody>
+          </table>
+          <div class="callout-green" style="margin-top: 12px;">
+            <p><strong>スキーマはチームで統一する</strong>ことが最重要。統一されていないと、ただのコメントになる。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- スライド 11: タグ・命名規則ガイドライン -->
+  <section>
+    <h2>タグ・命名規則ガイドライン</h2>
+    <div class="content">
+      <div class="grid-2col">
+        <div>
+          <h3>フォルダとタグの棲み分け</h3>
           <div class="info-card-navy">
             <p>
-              サンドボックスは主に<strong>Bashツール経由の実行</strong>をOSレベルで封じ込めるもの。
+              <strong>フォルダ</strong> = 物理的な居場所（1ノート1フォルダ）<br>
+              <strong>タグ</strong> = 論理的な属性（1ノートに複数タグ可）
             </p>
           </div>
-          <div class="callout-orange">
+          <h3 style="margin-top: 16px;">階層タグ命名ルール</h3>
+          <pre><code class="language-bash">#area/infra          # 領域: インフラ
+#area/security       # 領域: セキュリティ
+#type/howto          # 種別: 手順書
+#type/adr            # 種別: アーキテクチャ決定記録
+#type/postmortem     # 種別: 障害報告書
+#status/draft        # 状態: ドラフト
+#status/published    # 状態: 公開済み
+#status/archived     # 状態: アーカイブ済み</code></pre>
+        </div>
+        <div>
+          <h3>ファイル名・ID 規則</h3>
+          <pre><code class="language-bash">YYMMDD-&lt;kebab-case-slug&gt;.md
+
+# 例
+260410-dns-failover-howto.md
+260315-postmortem-api-outage.md
+260220-adr-authn-strategy.md</code></pre>
+          <div class="callout-yellow" style="margin-top: 16px;">
             <p>
-              <strong>注意：</strong>Read / Edit / Write などClaude Codeの<strong>組み込みツールはサンドボックスを経由しない</strong>（permissions設定で制御）。
+              <strong>なぜ英数字ファイル名か？</strong><br>
+              日本語ファイル名は SharePoint の URL エンコードで文字数制限を踏む。実運用での地雷なので英数字 kebab-case に統一。
             </p>
           </div>
-          <div class="callout-green">
-            <p>
-              <strong>最も効果的な組み合わせ：</strong><br>
-              permissions.deny（組み込みツール制御）<br>
-              + サンドボックス（Bash制御）
-            </p>
+          <div class="callout-green" style="margin-top: 12px;">
+            <p>トップレベルタグは <code>area / type / status / project</code> の4つに絞るのがおすすめ。</p>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ======================================== -->
-  <!-- 第4部: 対策編② — 間接リークの制御 -->
-  <!-- ======================================== -->
-
-  <!-- スライド 10: 間接リーク対策 -->
+  <!-- スライド 12: Dataview / Bases でクエリ一覧化 -->
   <section>
-    <h2>間接リーク対策 — 出力経由の漏洩を防ぐ</h2>
+    <h2>Dataview / Bases でクエリ一覧化 — 本日のハイライト ⭐</h2>
     <div class="content">
-      <p class="lead-sm">サンドボックスやdenyで直接アクセスを防いでも、<strong>スクリプトの実行結果（stdout）経由でClaudeが機密データを見てしまう</strong>問題がある。</p>
-      <div class="grid-2col-md">
-        <div>
-          <h3>対策①: PreToolUse Hooksで実行前検閲</h3>
-          <pre><code class="language-json">// settings.json
-{
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash .claude/hooks/block-sensitive-output.sh"
-          }
-        ]
-      }
-    ]
-  }
-}</code></pre>
-          <p>フックスクリプトで <code>df.head()</code> や <code>print(df)</code> 等のパターンを含むコマンドを<strong>実行前にブロック</strong>できる。</p>
-        </div>
-        <div>
-          <h3>対策②: CLAUDE.mdでルール化</h3>
-          <pre><code class="language-markdown"># CLAUDE.md に記載
-## データ分析ルール
-- 分析結果はoutput/に
-  ファイル出力すること
-- print()で機密データを
-  標準出力に出さないこと
-- 結果確認は
-  「output/result.csvに書き出しました」
-  と報告するだけにすること</code></pre>
-          <div class="callout-yellow" style="margin-top: 12px;">
-            <p>
-              <strong>注意：</strong>CLAUDE.mdはプロンプトレベルの防御。通常利用には実用的だが、完全な保証はない。
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- スライド 11: 最も確実な間接リーク対策 -->
-  <section>
-    <h2>最も確実な間接リーク対策</h2>
-    <div class="content">
-      <p class="lead">機密性が高い場合の鉄則：<strong>コードだけ書かせて、実行は別ターミナルで行う</strong></p>
+      <p class="lead">Vault の Markdown ファイルを、メタデータで動的に一覧化できる。SQL でテーブルを引く感覚。</p>
       <div class="grid-2col">
         <div>
-          <h3>なぜこれが最強なのか</h3>
-          <div class="callout-green">
-            <p>
-              deny設定でファイルの直接読み取りを防いでも、Claudeがスクリプトを実行すると<strong>標準出力経由で機密データを見てしまう</strong>（例：<code>df.head()</code>の結果）。
-            </p>
-          </div>
-          <p style="margin-top: 16px;">
-            実行を分離すれば、<strong>どんな設定漏れがあっても機密データがClaudeに渡らない</strong>。これが唯一の完全な対策。
-          </p>
+          <h3>ドラフト一覧（週次棚卸し用）</h3>
+          <pre><code class="language-sql">TABLE title AS "タイトル",
+       author AS "作成者",
+       updated AS "最終更新"
+FROM ""
+WHERE status = "draft"
+SORT updated DESC</code></pre>
+          <h3 style="margin-top: 12px;">90日以上更新なしの記事を洗い出す</h3>
+          <pre><code class="language-sql">TABLE title, author, updated,
+  (date(today) - date(updated)).days
+    AS "経過日数"
+FROM ""
+WHERE status = "published"
+  AND (date(today) - date(updated)).days > 90
+SORT updated ASC</code></pre>
         </div>
         <div>
-          <h3>状況別おすすめ</h3>
-          <table class="table-md">
-            <tbody>
-              <tr class="row-alt">
-                <td class="td-label-plain">通常の開発</td>
-                <td>deny設定 + サンドボックス</td>
-              </tr>
-              <tr>
-                <td class="td-label-plain">機密データの分析</td>
-                <td>deny + Hooks + CLAUDE.md</td>
-              </tr>
-              <tr class="row-alt">
-                <td class="td-label-plain">機密性が非常に高い</td>
-                <td><strong>コードだけ書かせて実行は別ターミナル</strong></td>
-              </tr>
-            </tbody>
-          </table>
+          <!-- ダミー画像プレースホルダー -->
+          <div style="background: #f0f0f0; border: 2px dashed #999; border-radius: 8px; height: 180px; display: flex; align-items: center; justify-content: center; color: #666; font-size: 14pt; text-align: center; padding: 16px; margin-bottom: 12px;">
+            📸 Bases / Dataview<br>クエリ結果画面<br>（後ほど差し替え）
+          </div>
+          <div class="callout-green">
+            <p>
+              <strong>Loop では作れない体験</strong><br>
+              新人向けオンボーディングページにクエリを埋め込めば、記事を追加するだけで<strong>一覧が自動更新</strong>される。メンテナンス不要。
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- スライド 13: PDF サイドカード方式 -->
+  <section>
+    <h2>PDF のタグ付け — サイドカード方式</h2>
+    <div class="content">
+      <p class="lead">PDF の隣に <code>.md</code> を置けばタグ付けできる。プラグイン不要。</p>
+      <div class="grid-2col">
+        <div>
+          <pre><code class="language-bash">attachments/
+├── vendor-spec-apigw.pdf
+├── vendor-spec-apigw.md   ← サイドカード
+├── contract-2026q1.pdf
+└── contract-2026q1.md     ← サイドカード</code></pre>
+          <pre style="margin-top: 12px;"><code class="language-yaml">---
+title: APIゲートウェイ仕様書 (ベンダー版)
+tags:
+  - type/spec
+  - area/infra
+  - vendor/acme
+source: vendor-spec-apigw.pdf
+received: 2026-03-01
+summary: >
+  mTLS認証、10k rps想定。
+  3章フェイルオーバーはDNS構成と関連。
+---
+
+![[vendor-spec-apigw.pdf]]</code></pre>
+        </div>
+        <div>
+          <h3>この方式のうまみ</h3>
+          <ul class="list-lg">
+            <li><strong>プラグイン不要</strong> — 標準 Obsidian で動く</li>
+            <li><strong>検索可能</strong> — 要約・メモがVault内検索にヒット</li>
+            <li><strong>Bases 対応</strong> — <code>type/spec</code> の一覧クエリにPDFが混ざって出る</li>
+            <li><strong>埋め込み表示</strong> — <code>![[...pdf]]</code> でエディタ内にインライン表示</li>
+          </ul>
           <div class="info-card" style="margin-top: 16px;">
-            <p>
-              Claude Codeには<strong>構造情報だけ</strong>（カラム名など）を伝えてスクリプトを作成してもらい、実行は手動で。最もシンプルかつ確実。
-            </p>
+            <p>「PDF はタグ付けできない」という先入観を外そう。<strong>隣に <code>.md</code> を置けばタグ付けできる。</strong></p>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ======================================== -->
-  <!-- 第5部: 実践編 — APIキー管理とGit対策 -->
-  <!-- ======================================== -->
-
-  <!-- スライド 12: APIキー管理① direnv -->
+  <!-- スライド 14: Obsidian 特有のコツ -->
   <section>
-    <h2>APIキーの安全な管理① — direnv</h2>
+    <h2>Obsidian 特有のコツ — ライブデモ③</h2>
     <div class="content">
-      <p class="lead-sm"><code>.env</code> ファイルにAPIキーを直接書くのはNG。ディレクトリ単位で環境変数を自動管理しよう。</p>
-      <div class="grid-2col-md">
+      <p class="lead">4つの便利機能。まずはデイリーノートから始めるのがおすすめ。</p>
+      <div class="grid-2col">
         <div>
-          <h3>セットアップと使い方</h3>
-          <pre><code class="language-bash"># インストール
-sudo apt-get install direnv
-
-# シェルに連携を追加（~/.bashrc の末尾）
-eval "$(direnv hook bash)"
-
-# プロジェクトに .envrc を作成
-echo 'export ANTHROPIC_API_KEY="sk-ant-..."' > .envrc
-
-# 承認（変更のたびに必要）
-direnv allow
-
-# ディレクトリ移動で自動ロード/アンロード
-cd your-project   # → 変数が自動ロード
-cd ..             # → 変数が自動アンロード</code></pre>
+          <div class="info-card-navy">
+            <p>
+              <strong>1. Templater プラグイン</strong><br>
+              ノート作成時にテンプレートを自動適用。<br>
+              <code>&lt;% tp.date.now("YYYY-MM-DD") %&gt;</code> でフロントマターの <code>created</code> を自動入力。
+            </p>
+          </div>
+          <div class="info-card-navy" style="margin-top: 12px;">
+            <p>
+              <strong>2. デイリーノート</strong><br>
+              日付ごとに1ノート自動生成（<code>daily/2026-04-10.md</code>）。<br>
+              その日の考え・読んだPDF・会議メモを全部ここに放り込む。
+            </p>
+          </div>
         </div>
         <div>
-          <h3>セキュリティのポイント</h3>
+          <div class="info-card-navy">
+            <p>
+              <strong>3. 埋め込み <code>![[...]]</code></strong><br>
+              他ノートをインラインで埋め込む。部分埋め込み（<code>![[note#見出し]]</code>）も可。情報を重複させずに参照できる。
+            </p>
+          </div>
+          <div class="info-card-navy" style="margin-top: 12px;">
+            <p>
+              <strong>4. Outgoing Links パネル</strong><br>
+              いま開いているノートから出ていくリンク一覧。バックリンクと組み合わせて「ノートを関係の中心として捉える」視点を得る。
+            </p>
+          </div>
+          <!-- ダミー画像プレースホルダー -->
+          <div style="background: #f0f0f0; border: 2px dashed #999; border-radius: 8px; height: 80px; display: flex; align-items: center; justify-content: center; color: #666; font-size: 12pt; text-align: center; margin-top: 12px;">
+            📸 Templater / デイリーノート画面
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- スライド 15: コンフリクト対策 -->
+  <section>
+    <h2>コンフリクト対策 — 1ファイル1トピックの原則</h2>
+    <div class="content">
+      <p class="lead">技術では解決しない。運用ルールで解決する。</p>
+      <div class="grid-2col">
+        <div>
+          <div class="callout-orange">
+            <p><strong>OneDrive 同期 ≠ リアルタイム共同編集</strong><br>同じ <code>.md</code> を複数人が同時編集するとコンフリクトコピーが発生する。</p>
+          </div>
+          <h3 style="margin-top: 16px;">❌ 悪い例</h3>
+          <pre><code class="language-bash">infra-handbook.md
+  （500行、全領域を網羅した巨大ファイル）</code></pre>
+          <h3>✅ 良い例</h3>
+          <pre><code class="language-bash">infra/
+├── dns-setup.md
+├── dns-failover.md
+├── vpn-config.md
+└── monitoring.md</code></pre>
+        </div>
+        <div>
+          <h3>3つのルール</h3>
           <ul class="list-lg">
-            <li><code>.envrc</code> は<strong>絶対にGitにコミットしない</strong></li>
-            <li>グローバルな <code>.gitignore</code> で除外設定：</li>
+            <li><strong>1ファイル1トピック</strong> — ファイルを細分化。同じファイルを複数人が同時に触る確率を下げる</li>
+            <li><strong>フロー型は Loop に任せる</strong> — 議事録・リアルタイムコラボは Loop のまま。ストック型だけ Obsidian</li>
+            <li><strong>SharePoint バージョン履歴を保険に</strong> — 最大500バージョン保持。万が一の復元に使う</li>
           </ul>
-          <pre><code class="language-bash"># グローバルgitignoreに追加
-echo ".envrc" >> ~/.gitignore_global
-git config --global core.excludesfile \
-  ~/.gitignore_global</code></pre>
-          <div class="callout-green">
-            <p>
-              ディレクトリを抜けると変数は<strong>自動的に消える</strong>。別プロジェクトのClaude Codeセッションが機密情報を継承しない。
-            </p>
+          <!-- ダミー画像プレースホルダー -->
+          <div style="background: #f0f0f0; border: 2px dashed #999; border-radius: 8px; height: 80px; display: flex; align-items: center; justify-content: center; color: #666; font-size: 12pt; text-align: center; margin-top: 12px;">
+            📸 ファイル細分化前後の比較
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- スライド 13: APIキー管理② secret-tool -->
+  <!-- スライド 16: 検索の活用 -->
   <section>
-    <h2>APIキーの安全な管理② — secret-tool</h2>
+    <h2>検索の活用 — 二層の検索戦略</h2>
     <div class="content">
-      <p class="lead-sm">さらに安全に：APIキーをOSのキーリング（金庫）に保存し、ファイルには一切書かない。</p>
-      <div class="grid-2col-md">
+      <p class="lead">書く人は Obsidian、読むだけの人は SharePoint。両方が同じファイルを見ている。</p>
+      <div class="grid-2col">
         <div>
-          <h3>保存と取得のコマンド</h3>
-          <pre><code class="language-bash"># APIキーをキーリングに保存（初回のみ）
-secret-tool store \
-  --label="Anthropic API Key" \
-  service anthropic user developer
-# → パスワード入力プロンプトが表示される
-
-# .envrc から取得（direnvと組み合わせ）
-export ANTHROPIC_API_KEY=$( \
-  secret-tool lookup \
-    service anthropic \
-    user developer \
-)</code></pre>
+          <div class="summary-card">
+            <h3>第1層: Obsidian 内検索</h3>
+            <p>Cmd+Shift+F（Mac）/ Ctrl+Shift+F（Win）</p>
+            <ul style="margin-top: 8px; font-size: 0.9em;">
+              <li>全文検索（本文の文字列）</li>
+              <li>タグ検索: <code>tag:#area/infra</code></li>
+              <li>メタデータ検索: <code>[status:published]</code></li>
+              <li>正規表現: <code>/pattern/</code></li>
+            </ul>
+          </div>
         </div>
         <div>
-          <h3>なぜこれが安全なのか</h3>
+          <div class="summary-card">
+            <h3>第2層: SharePoint 側検索</h3>
+            <p>Obsidian を持っていない人も使える</p>
+            <ul style="margin-top: 8px; font-size: 0.9em;">
+              <li>経営層・他部署メンバーが「ちょっと調べたい」ときに使う</li>
+              <li>Microsoft 365 統合検索（Teams / Outlook と横串）</li>
+              <li>エクスプローラの検索ボックスからも可</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <!-- ダミー画像プレースホルダー -->
+      <div style="background: #f0f0f0; border: 2px dashed #999; border-radius: 8px; height: 80px; display: flex; align-items: center; justify-content: center; color: #666; font-size: 12pt; text-align: center; margin-top: 16px;">
+        📸 Obsidian 検索結果 + SharePoint 検索結果（同じファイルが出る様子）
+      </div>
+    </div>
+  </section>
+
+  <!-- スライド 17: セキュリティ・ガバナンス -->
+  <section>
+    <h2>セキュリティ・ガバナンス</h2>
+    <div class="content">
+      <p class="lead">SharePoint がバックエンドなので、ガバナンスは SharePoint に委譲できる。</p>
+      <div class="grid-2col">
+        <div>
+          <h3>権限管理は SharePoint 側で</h3>
           <ul class="list-lg">
-            <li>APIキーは<strong>メモリ上にのみ</strong>存在する</li>
-            <li>ディスク上のファイルに<strong>平文で書き込まれない</strong></li>
-            <li><code>export</code> コマンドを直接打たないので<strong>シェル履歴に残らない</strong></li>
-            <li>GNOMEキーリングが暗号化して管理</li>
+            <li>Obsidian には権限の概念がない。Vault を開ける人はすべて見える</li>
+            <li>部門ごとにライブラリを分ける</li>
+            <li>機密情報は別ライブラリに隔離し、必要な人だけ同期</li>
+            <li><strong>1つの巨大Vaultにすべて突っ込まない</strong>のがポイント</li>
           </ul>
-          <div class="callout-yellow">
-            <p>
-              <strong>最強の組み合わせ：direnv + secret-tool</strong><br>
-              .envrc 内で secret-tool を呼び出せば、ファイルにもシェル履歴にもキーが残らない。
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- スライド 14: Gitleaks -->
-  <section>
-    <h2>コミット前の最終防波堤 — Gitleaks</h2>
-    <div class="content">
-      <p class="lead-sm">うっかりAPIキーをコミットしてしまうのを自動で防ぐ。</p>
-      <div class="grid-2col-md">
-        <div>
-          <h3>セットアップ</h3>
-          <pre><code class="language-bash"># インストール
-sudo apt-get install gitleaks
-
-# プリコミットフックとして設定
-# .pre-commit-config.yaml に追加:
-repos:
-  - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.21.2
-    hooks:
-      - id: gitleaks</code></pre>
-          <p>これで <code>git commit</code> のたびに自動スキャンが走り、APIキーのパターンが検出されるとコミットがブロックされる。</p>
         </div>
         <div>
-          <h3>なぜ必要か</h3>
           <div class="callout-red">
             <p>
-              Gitは<strong>「追記専用」</strong>のデータモデル。一度コミットされたシークレットは、最新版から削除しても<strong>履歴に残り続ける</strong>。
+              <strong>Wiki に書いてはいけないもの:</strong><br>
+              個人情報・顧客データ・パスワード<br>
+              → パスワード管理ツールや Key Vault に置き、<strong>Wiki からはリンクだけ書く</strong>
             </p>
           </div>
-          <ul class="list-lg">
-            <li>Claude CodeはGit履歴を遡ってシークレットを発見しうる</li>
-            <li>公開リポジトリなら外部の攻撃者にも見える</li>
-            <li>履歴からの完全削除は非常に手間がかかる</li>
-          </ul>
-          <div class="callout-green">
-            <p><strong>「コミットさせない」のが最も確実な防御。</strong></p>
+          <div class="info-card" style="margin-top: 16px;">
+            <p>
+              <strong>退職者対応:</strong><br>
+              アカウントを消しても <code>.md</code> ファイルは SharePoint に残る。<code>author</code> フィールドで文脈が辿れる。ファイルは<strong>ユーザーではなく Vault に帰属</strong>する（Loop では不可能）。
+            </p>
           </div>
         </div>
       </div>
@@ -601,48 +592,77 @@ repos:
   </section>
 
   <!-- ======================================== -->
-  <!-- 第6部: まとめ -->
+  <!-- Closing -->
   <!-- ======================================== -->
 
-  <!-- スライド 15: まとめ -->
+  <!-- スライド 18: まとめ -->
   <section>
-    <h2>まとめ — 今日から実践する4つのこと</h2>
+    <h2>まとめ — 明日から始める 3 ステップ</h2>
     <div class="content">
-      <div class="grid-2col">
+      <p class="lead">今日の午後にでも始められる。所要時間は 15 分以内。</p>
+      <div class="grid-3col">
         <div class="summary-card">
-          <h3>① アクセス制御を設定する</h3>
-          <p>
-            <code>permissions.deny</code> で機密ファイルをブロック +<br>
-            <strong>サンドボックスを常時ON</strong>にしてBash経由のアクセスも防ぐ。
-          </p>
+          <h3>① Vault を立ち上げる</h3>
+          <p>SharePoint ライブラリを1つ選び、「同期」ボタンを押す。同期先フォルダを Obsidian で「Open folder as vault」。<strong>5分で完了。</strong></p>
         </div>
         <div class="summary-card">
-          <h3>② 間接リークにも備える</h3>
-          <p>
-            <strong>Hooks</strong>で危険なコマンドを事前ブロック。<strong>CLAUDE.md</strong>で出力ルールを定義。<br>
-            機密性が高ければ<strong>実行は別ターミナル</strong>で。
-          </p>
+          <h3>② 1ノート書く</h3>
+          <p>今日の業務から何か1つ手順や知見をノートに。スライド10のフロントマターをコピペし、<code>title / tags / status</code> だけ埋める。<code>#status/draft</code> で OK。</p>
         </div>
         <div class="summary-card">
-          <h3>③ APIキーを正しく管理する</h3>
-          <p>
-            <code>.env</code> に直接書かない。<br>
-            <strong>direnv + secret-tool</strong> でファイルにもシェル履歴にも残さない。
-          </p>
-        </div>
-        <div class="summary-card">
-          <h3>④ Gitleaksを入れる</h3>
-          <p>
-            プリコミットフックで<strong>うっかりコミットを自動ブロック</strong>。<br>
-            一度入った秘密は消せない。
-          </p>
+          <h3>③ Bases で体感する</h3>
+          <p>スライド12のクエリ例1をそのまま貼り付ける。<code>#status/draft</code> のノートが一覧に出る。<strong>「これは Loop ではできなかった」</strong>を自分の手で味わう。</p>
         </div>
       </div>
-      <div class="callout-yellow">
+      <div class="callout-green" style="margin-top: 20px;">
         <p>
-          Claude Codeは<strong>優秀だけど何でも読める実習生</strong>。<br>
-          見せたくないものには鍵をかけよう。直接アクセスだけでなく<strong>出力経由のリーク</strong>にも注意。
+          まずは<strong>一人で Vault を持ってみる</strong>のが最良のスタート。<br>
+          チームに広める話はまた別の機会に。
         </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- スライド 19: Q&A / 参考資料 -->
+  <section>
+    <h2>Q&amp;A / 参考資料</h2>
+    <div class="content">
+      <div class="grid-2col">
+        <div>
+          <h3>公式ドキュメント</h3>
+          <ul class="list-lg">
+            <li>Obsidian 公式: <code>obsidian.md</code></li>
+            <li>Obsidian Help（Vault / Linking / Graph view）</li>
+            <li>Obsidian Bases: <code>help.obsidian.md/bases</code></li>
+            <li>Dataview プラグイン</li>
+            <li>Templater プラグイン</li>
+          </ul>
+          <h3 style="margin-top: 16px;">情報整理フレームワーク</h3>
+          <ul class="list-lg">
+            <li>PARA（Tiago Forte）: <code>fortelabs.com/blog/para</code></li>
+            <li>Zettelkasten 入門: <code>zettelkasten.de</code></li>
+          </ul>
+        </div>
+        <div>
+          <h3>SharePoint × OneDrive 同期</h3>
+          <ul class="list-lg">
+            <li>SharePoint ファイルの同期（Microsoft サポート）</li>
+            <li>同期のトラブルシューティング</li>
+          </ul>
+          <div class="info-card" style="margin-top: 16px;">
+            <p>
+              <strong>社内の参考 Vault</strong><br>
+              社内 SharePoint にサンプル Vault を置いてあります。<br>
+              フロントマター雛形・Templater テンプレート・Bases クエリ集の実物入り。<br>
+              各自の Vault 立ち上げ時にコピーしてください。
+            </p>
+          </div>
+          <div class="callout-green" style="margin-top: 12px;">
+            <p>
+              ご質問は Teams の <strong><code>#wiki-ops</code></strong> チャンネルでも受け付けます。
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   </section>
