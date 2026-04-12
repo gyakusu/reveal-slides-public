@@ -1,0 +1,154 @@
+<div class="slides">
+
+  <!-- ======================================== -->
+  <!-- Opening -->
+  <!-- ======================================== -->
+
+  <!-- スライド 1: タイトル -->
+  <section class="section-divider">
+    <h1>知識は繋がって<br>初めて価値を生む</h1>
+    <p style="margin-top: 16px;">
+      SharePoint × Obsidian ではじめる社内 Wiki
+    </p>
+    <p class="section-subtitle" style="margin-top: 8px;">
+      対象: SharePoint を業務で使っているエンジニア・技術者
+    </p>
+    <aside class="notes">
+      今日のテーマは「ドキュメントを書くこと」より「繋げること」。<br>
+      Why（なぜ今の方法では限界か）→ How（具体的なセットアップと運用）の順で話します。
+    </aside>
+  </section>
+
+  <!-- ======================================== -->
+  <!-- Why — なぜ既存ツールではダメか（2〜5枚） -->
+  <!-- ======================================== -->
+
+  <!-- スライド 2: 既存ツールの課題 -->
+  <section>
+    <h2>既存ツールの課題 — "ありがち" な困りごと</h2>
+    <p class="lead">ドキュメントは書いている。でも「あの情報」が見つからない。</p>
+    <div class="grid-2col">
+      <div>
+        <ul class="list-lg">
+          <li>「Loopに書いたはず」→ 検索しても出てこない</li>
+          <li>「去年のトラブル対応、誰かまとめてたよな」→ バラバラで全体像が掴めない</li>
+          <li>「オンボーディング資料を作ろう」→ 既存ドキュメントを探すたびに挫折</li>
+        </ul>
+      </div>
+      <div>
+        <div class="callout-orange">
+          <p>
+            <strong>問題の本質:</strong><br>
+            情報が「ない」のではなく、<br>
+            情報が<strong>「点在している」</strong>。<br>
+            書いた本人すら再発見できない<br>
+            「知識のブラックホール」状態。
+          </p>
+        </div>
+        <div class="info-card mt-16">
+          <p>書き方そのものを変える必要がある。<br>バラバラなドキュメントを<strong>「繋げる」仕組み</strong>が必要。</p>
+        </div>
+      </div>
+    </div>
+    <aside class="notes">
+      「あるある」として会場に問いかける。手を挙げてもらうと場が温まる。<br>
+      「知識のブラックホール」は書いた本人すら取り出せない状態を指す、と補足する。
+    </aside>
+  </section>
+
+  <!-- スライド 3: なぜ Microsoft Loop ではダメか -->
+  <section>
+    <h2>なぜ Microsoft Loop ではダメか</h2>
+    <p class="lead">Loop はコラボツールとして優秀。でも「知識の蓄積」には構造的に向いていない。</p>
+    <table class="table-lg">
+      <thead>
+        <tr>
+          <th style="width: 35%;">課題</th>
+          <th>詳細</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="row-alt">
+          <td class="td-label">タグ付けができない</td>
+          <td>ラベルによる横断的な分類・絞り込みが不可能</td>
+        </tr>
+        <tr>
+          <td class="td-label">動的一覧化ができない</td>
+          <td>「ドラフト一覧」「領域別の公開済み記事」をクエリで作れない</td>
+        </tr>
+        <tr class="row-alt">
+          <td class="td-label">グラフビューがない</td>
+          <td>ドキュメント同士の繋がりを可視化する手段がない</td>
+        </tr>
+        <tr>
+          <td class="td-label">アップデートが乏しい</td>
+          <td>この1年、目立った機能追加がほとんどない</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="callout-yellow mt-20">
+      <p>
+        <strong>誤解なく:</strong> Loop をやめるのではない。<br>
+        フロー型（議事録・リアルタイムコラボ）は Loop のまま。<br>
+        <strong>ストック型の知識資産</strong>を置く場所として別の選択肢が必要。
+      </p>
+    </div>
+    <aside class="notes">
+      「Loop が悪い」ではなく「用途が違う」という文脈を強調する。<br>
+      フロー型 vs ストック型の区別をしっかり伝えることで、反発を防ぐ。
+    </aside>
+  </section>
+
+  <!-- スライド 4: 目指す姿 -->
+  <section>
+    <h2>目指す姿 — 有機的に繋がる資料</h2>
+    <p class="lead">3つの価値をバランスよく取りに行く。</p>
+    <div class="grid-3col">
+      <div class="summary-card">
+        <h3>🔍 知見の再発見</h3>
+        <p>リンクとグラフビューで「あれとこれが繋がっていた」という発見が起きる。過去の自分が半年後の自分を助ける状態。</p>
+      </div>
+      <div class="summary-card">
+        <h3>📝 暗黙知の構造化</h3>
+        <p>口頭で伝わっているだけの知識を、Markdown とフロントマターで半構造化データにする。タグ・ステータスで再利用可能に。</p>
+      </div>
+      <div class="summary-card">
+        <h3>🤖 AI/LLM との相性</h3>
+        <p>Markdown はプレーンテキスト。将来 RAG で社内AIアシスタントを作るとき、最も食わせやすい形式。<strong>今書いた資産が未来のAI資産になる。</strong></p>
+      </div>
+    </div>
+    <aside class="notes">
+      3つを一つずつ説明する。🤖 は「今すぐ必要なわけではない」が「今書いておくと後で得をする」という投資の話として伝える。
+    </aside>
+  </section>
+
+  <!-- スライド 5: なぜ Markdown か -->
+  <section>
+    <h2>なぜ Markdown か</h2>
+    <p class="lead">プレーンテキストが一番強い。</p>
+    <div class="grid-2col">
+      <div>
+        <ul class="list-lg">
+          <li><strong>再利用性が高い</strong> — テキストエディタで開ける。<code>grep</code> で検索、<code>git diff</code> で差分</li>
+          <li><strong>ツールロックインからの解放</strong> — Obsidian をやめても <code>.md</code> ファイルはそのまま持っていける</li>
+          <li><strong>Git との親和性</strong> — バージョン管理が効く。SharePoint のバージョン履歴との二重安全網</li>
+          <li><strong>LLM との親和性</strong> — 現在の LLM が最も得意とする入力形式の1つ</li>
+        </ul>
+      </div>
+      <div>
+        <div class="callout-green">
+          <p>
+            <strong>ここから How の話に入ります。</strong><br><br>
+            ここまで（Why）が 5枚。<br>
+            残りのスライドは<strong>全部「どうやるか」</strong>です。
+          </p>
+        </div>
+      </div>
+    </div>
+    <aside class="notes">
+      Markdown の「普遍性」を強調。どのツールが廃れても .md ファイルは残る。<br>
+      ここで Why パートを締め、次のスライドから How（セットアップ）に移ることを宣言する。
+    </aside>
+  </section>
+
+</div>

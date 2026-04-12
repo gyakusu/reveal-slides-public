@@ -7,6 +7,14 @@
        // 基本（デフォルト設定で初期化）
        RevealInit.start();
 
+       // 複数ファイルに分割されたスライドを結合して読み込む
+       RevealInit.start({
+         slides: [
+           "slides-01-foo.html",
+           "slides-02-bar.html",
+         ]
+       });
+
        // カスタム設定 + プレゼン固有ロジック
        RevealInit.start({
          config: { transition: "fade" },
@@ -20,25 +28,34 @@
      - Reveal.js コア・プラグイン・Mermaid の <script> タグが
        このファイルより前に読み込まれていること
      - #slides-container 要素が存在すること
-     - slides.html が同じディレクトリに存在すること
+     - slides オプション省略時は slides.html を読み込む
    ================================================================ */
 
 window.RevealInit = {
   start: function (options) {
     options = options || {};
 
-    fetch("slides.html")
-      .then(function (r) {
-        return r.text();
-      })
-      .then(function (html) {
-        var doc = new DOMParser().parseFromString(html, "text/html");
-        var content = doc.querySelector(".slides");
-        if (content) {
-          document.getElementById("slides-container").innerHTML =
-            content.innerHTML;
-        }
+    // slides オプションで複数ファイルを指定可能（省略時は slides.html を使用）
+    var slideFiles = options.slides || ["slides.html"];
 
+    Promise.all(
+      slideFiles.map(function (file) {
+        return fetch(file).then(function (r) {
+          return r.text();
+        });
+      })
+    )
+      .then(function (htmlList) {
+        var combined = htmlList
+          .map(function (html) {
+            var doc = new DOMParser().parseFromString(html, "text/html");
+            var content = doc.querySelector(".slides");
+            return content ? content.innerHTML : "";
+          })
+          .join("\n");
+        document.getElementById("slides-container").innerHTML = combined;
+      })
+      .then(function () {
         var config = Object.assign(
           {
             // ナビゲーション設定

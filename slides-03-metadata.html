@@ -1,0 +1,182 @@
+<div class="slides">
+
+  <!-- ======================================== -->
+  <!-- How — メタデータ・タグ・クエリ・PDF（10〜13枚） -->
+  <!-- ======================================== -->
+
+  <!-- スライド 10: メタデータ（フロントマター）の推奨スキーマ -->
+  <section>
+    <h2>メタデータ（フロントマター）の推奨スキーマ</h2>
+    <div class="content">
+      <p class="lead">Markdown ファイル先頭に YAML でメタデータを付ける。これが Bases の燃料になる。</p>
+      <div class="grid-2col">
+        <div>
+          <pre><code class="language-yaml">---
+title: ネットワーク障害対応手順 - DNS
+aliases:
+  - DNS障害対応
+  - フェイルオーバー手順
+tags:
+  - area/infra
+  - type/howto
+  - status/published
+created: 2026-03-15
+updated: 2026-04-10
+author: kususaki
+status: published
+related:
+  - "[[20_areas/infra/DNS構成]]"
+---</code></pre>
+        </div>
+        <div>
+          <table class="table-md">
+            <thead>
+              <tr><th>フィールド</th><th>用途</th></tr>
+            </thead>
+            <tbody>
+              <tr class="row-alt"><td class="td-label">title</td><td>表示用タイトル（ファイル名と分離）</td></tr>
+              <tr><td class="td-label">aliases</td><td>別名・略称。<code>[[略称]]</code> でも解決</td></tr>
+              <tr class="row-alt"><td class="td-label">tags</td><td>階層タグで横断分類</td></tr>
+              <tr><td class="td-label">created / updated</td><td>タイムスタンプ。Bases の期間クエリで「90日未更新」などに使う</td></tr>
+              <tr class="row-alt"><td class="td-label">author</td><td>作成者。週次棚卸しクエリで担当者を特定できる</td></tr>
+              <tr><td class="td-label">status</td><td>draft / review / published / archived</td></tr>
+              <tr class="row-alt"><td class="td-label">related</td><td>Bases クエリで引ける関連リンク</td></tr>
+            </tbody>
+          </table>
+          <div class="callout-green" style="margin-top: 12px;">
+            <p><strong>スキーマはチームで統一する</strong>ことが最重要。統一されていないと、ただのコメントになる。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- スライド 11: タグ・命名規則ガイドライン -->
+  <section>
+    <h2>タグ・命名規則ガイドライン</h2>
+    <div class="content">
+      <div class="grid-2col">
+        <div>
+          <h3>フォルダとタグの棲み分け</h3>
+          <div class="info-card-navy">
+            <p>
+              <strong>フォルダ</strong> = 物理的な居場所（1ノート1フォルダ）<br>
+              <strong>タグ</strong> = 論理的な属性（1ノートに複数タグ可）
+            </p>
+          </div>
+          <h3 style="margin-top: 16px;">階層タグ命名ルール</h3>
+          <pre><code class="language-text">#area/infra          # 領域: インフラ
+#area/security       # 領域: セキュリティ
+#type/howto          # 種別: 手順書
+#type/adr            # 種別: アーキテクチャ決定記録
+#type/postmortem     # 種別: 障害報告書
+#status/draft        # 状態: ドラフト
+#status/published    # 状態: 公開済み
+#status/archived     # 状態: アーカイブ済み
+#project/alpha       # プロジェクト: Alphaプロジェクト</code></pre>
+        </div>
+        <div>
+          <h3>ファイル名・ID 規則</h3>
+          <pre><code class="language-bash">YYMMDD-&lt;kebab-case-slug&gt;.md
+
+# 例
+260410-dns-failover-howto.md
+260315-postmortem-api-outage.md
+260220-adr-authn-strategy.md</code></pre>
+          <div class="callout-yellow" style="margin-top: 16px;">
+            <p>
+              <strong>なぜ英数字ファイル名か？</strong><br>
+              日本語ファイル名は SharePoint の URL エンコードで文字数制限を踏む。実運用での地雷なので英数字 kebab-case に統一。
+            </p>
+          </div>
+          <div class="callout-green" style="margin-top: 12px;">
+            <p>トップレベルタグは <code>area / type / status / project</code> の4つに絞るのがおすすめ。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- スライド 12: Dataview / Bases でクエリ一覧化 -->
+  <section>
+    <h2>Dataview / Bases でクエリ一覧化 — ライブデモ② ⭐</h2>
+    <div class="content">
+      <p class="lead">Vault の Markdown ファイルを、メタデータで動的に一覧化できる。SQL でテーブルを引く感覚。</p>
+      <div class="grid-2col">
+        <div>
+          <h3>ドラフト一覧（週次棚卸し用）</h3>
+          <pre><code class="language-sql">TABLE title AS "タイトル",
+       author AS "作成者",
+       updated AS "最終更新"
+FROM ""  -- Vault 内全ファイルを対象
+WHERE status = "draft"
+SORT updated DESC</code></pre>
+          <h3 style="margin-top: 12px;">90日以上更新なしの記事を洗い出す</h3>
+          <pre><code class="language-sql">TABLE title, author, updated,
+  (date(today) - date(updated)).days
+    AS "経過日数"
+FROM ""  -- Vault 内全ファイルを対象
+WHERE status = "published"
+  AND (date(today) - date(updated)).days > 90
+SORT updated ASC</code></pre>
+        </div>
+        <div>
+          <!-- ダミー画像プレースホルダー -->
+          <div style="background: #f0f0f0; border: 2px dashed #999; border-radius: 8px; height: 180px; display: flex; align-items: center; justify-content: center; color: #666; font-size: 14pt; text-align: center; padding: 16px; margin-bottom: 12px;">
+            📸 Bases / Dataview<br>クエリ結果画面<br>（後ほど差し替え）
+          </div>
+          <div class="callout-green">
+            <p>
+              <strong>Loop では作れない体験</strong><br>
+              新人向けオンボーディングページにクエリを埋め込めば、記事を追加するだけで<strong>一覧が自動更新</strong>される。メンテナンス不要。
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- スライド 13: PDF サイドカード方式 -->
+  <section>
+    <h2>PDF のタグ付け — サイドカード方式</h2>
+    <div class="content">
+      <p class="lead">PDF の隣に <code>.md</code> を置けばタグ付けできる。プラグイン不要。</p>
+      <div class="grid-2col">
+        <div>
+          <pre><code class="language-bash">attachments/
+├── vendor-spec-apigw.pdf
+├── vendor-spec-apigw.md   ← サイドカード
+├── contract-2026q1.pdf
+└── contract-2026q1.md     ← サイドカード</code></pre>
+          <pre style="margin-top: 12px;"><code class="language-yaml">---
+title: APIゲートウェイ仕様書 (ベンダー版)
+tags:
+  - type/spec
+  - area/infra
+  - vendor/acme
+source: vendor-spec-apigw.pdf
+received: 2026-03-01
+summary: >
+  mTLS認証、10k rps想定。
+  3章フェイルオーバーはDNS構成と関連。
+---
+
+![[vendor-spec-apigw.pdf]]</code></pre>
+        </div>
+        <div>
+          <h3>この方式のうまみ</h3>
+          <ul class="list-lg">
+            <li><strong>プラグイン不要</strong> — 標準 Obsidian で動く</li>
+            <li><strong>検索可能</strong> — 要約・メモがVault内検索にヒット</li>
+            <li><strong>Bases 対応</strong> — <code>type/spec</code> の一覧クエリにPDFが混ざって出る</li>
+            <li><strong>埋め込み表示</strong> — <code>![[...pdf]]</code> でエディタ内にインライン表示</li>
+          </ul>
+          <div class="info-card" style="margin-top: 16px;">
+            <p>「PDF はタグ付けできない」という先入観を外そう。<strong>隣に <code>.md</code> を置けばタグ付けできる。</strong></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>

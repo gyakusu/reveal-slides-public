@@ -1,0 +1,137 @@
+<div class="slides">
+
+  <!-- ======================================== -->
+  <!-- How — セットアップ・基本操作（6〜9枚） -->
+  <!-- ======================================== -->
+
+  <!-- スライド 6: 解決策アーキテクチャ -->
+  <section>
+    <h2>解決策アーキテクチャ — SharePoint × Obsidian</h2>
+    <div class="content">
+      <p class="lead">SharePoint はバックエンド、Obsidian はフロントエンド。</p>
+      <div class="mermaid">
+flowchart LR
+  SP["☁️ SharePoint<br/>(ライブラリ)"]
+  OD["🔄 OneDrive<br/>(エクスプローラ同期)"]
+  VAULT["📁 Vault\n(.md ファイル群)"]
+  OB["🔷 Obsidian\n(編集・可視化)"]
+  SP -- "同期ボタン" --> OD
+  OD -- "ローカルに展開" --> VAULT
+  VAULT -- "Open folder as vault" --> OB
+  style SP fill:#0078D4,color:#fff
+  style OD fill:#0078D4,color:#fff
+  style VAULT fill:#1C2B4B,color:#fff
+  style OB fill:#7C3AED,color:#fff
+      </div>
+      <div class="grid-3col" style="margin-top: 20px;">
+        <div class="info-card">
+          <p><strong>SharePoint</strong><br>クラウド正本・同期・バックアップ・権限管理・バージョン履歴</p>
+        </div>
+        <div class="info-card">
+          <p><strong>OneDrive</strong><br>SharePoint → ローカル PC への橋渡し。エクスプローラから直接操作可</p>
+        </div>
+        <div class="info-card">
+          <p><strong>Obsidian</strong><br>編集・リンク可視化・グラフビュー・Bases クエリ。すべて無料</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- スライド 7: セットアップ概要 -->
+  <section>
+    <h2>セットアップ概要 — たった 3 ステップ</h2>
+    <div class="content">
+      <p class="lead">所要時間は 5 分。新しく構築するものは何もない。</p>
+      <div class="grid-3col">
+        <div class="summary-card">
+          <h3>① SharePoint ライブラリを選ぶ</h3>
+          <p>Wiki として使うドキュメントライブラリを決める。既存のものを流用しても、新規作成でも OK。権限管理はここで設定。</p>
+        </div>
+        <div class="summary-card">
+          <h3>② OneDrive 経由でエクスプローラ同期</h3>
+          <p>ブラウザで SharePoint を開き「同期」ボタンを押す。Windows はエクスプローラ、Mac は Finder に Vault が出現。</p>
+        </div>
+        <div class="summary-card">
+          <h3>③ Vault として開く</h3>
+          <p>Obsidian 起動 → 「Open folder as vault」で同期先フォルダを指定。これだけで完了。</p>
+        </div>
+      </div>
+      <div class="callout-green" style="margin-top: 20px;">
+        <p>
+          <strong>ポイント: <code>.obsidian</code> フォルダを同期対象に含めるとチーム設定を統一できる（推奨）</strong><br>
+          Bases 定義・プラグイン設定を揃えたい場合は SharePoint 同期対象に含めること。個人設定で分けたい場合は除外も可。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- スライド 8: サンプル Vault のファイル構造 -->
+  <section>
+    <h2>サンプル Vault のファイル構造</h2>
+    <div class="content">
+      <p class="lead">PARA（Projects / Areas / Resources / Archive）ベースの構成例。</p>
+      <div class="grid-2col">
+        <div>
+          <pre><code class="language-bash">Vault/
+├── 00_inbox/         # とりあえず放り込む場所
+├── 10_projects/      # 進行中のプロジェクト
+│   ├── proj-alpha/
+│   └── proj-beta/
+├── 20_areas/         # 継続的に面倒を見る領域
+│   ├── infra/
+│   ├── security/
+│   └── team-ops/
+├── 30_resources/     # 参考資料・ナレッジ
+│   ├── guides/
+│   └── references/
+├── 40_archive/       # 終わったもの
+├── attachments/      # 画像・PDFなど
+└── templates/        # Templater テンプレート</code></pre>
+        </div>
+        <div>
+          <div class="info-card">
+            <p><strong>番号プレフィックスの狙い</strong><br>エクスプローラ・サイドバーでの表示順を固定するため。アルファベット順だと archive が先頭に来て気持ち悪い。</p>
+          </div>
+          <div class="callout-green" style="margin-top: 16px;">
+            <p>
+              <strong>ポイント:</strong> この構造は出発点。<br>
+              運用しながらチームの実態に合わせて変えていく。<br>
+              いきなり完璧を目指さない。
+            </p>
+          </div>
+          <div class="info-card" style="margin-top: 12px;">
+            <p>
+              <strong>📎 attachments/ の PDF について</strong><br>
+              PDF 自体にはタグが付けられないが、隣に <code>.md</code> を置く「サイドカード方式」で Bases 対象にできる。<strong>→ スライド 13 で詳説</strong>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- スライド 9: Obsidian の基本操作 -->
+  <section>
+    <h2>Obsidian の基本操作 — ライブデモ①</h2>
+    <div class="content">
+      <p class="lead">リンクで繋がり、双方向に見え、全体像がグラフで見える。</p>
+      <div class="grid-2col">
+        <div>
+          <ul class="list-lg">
+            <li><strong>ノート作成</strong> — サイドバー右クリック → 新規ノート</li>
+            <li><strong>内部リンク <code>[[...]]</code></strong> — <code>[[</code> と入力すると候補ポップアップ。存在しないノートでもリンクを先に書ける</li>
+            <li><strong>バックリンク</strong> — 右サイドバーで「どこから参照されているか」を一覧表示</li>
+            <li><strong>グラフビュー</strong> — Vault 全体のリンク関係をネットワーク図で可視化<br><code>Cmd+Opt+G</code>（Mac）/ <code>Ctrl+G</code>（Win）</li>
+          </ul>
+        </div>
+        <div>
+          <!-- ダミー画像プレースホルダー（スクリーンショット差し替え） -->
+          <div style="background: #f0f0f0; border: 2px dashed #999; border-radius: 8px; height: 220px; display: flex; align-items: center; justify-content: center; color: #666; font-size: 14pt; text-align: center; padding: 16px;">
+            📸 グラフビューの<br>スクリーンショット<br>（後ほど差し替え）
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>

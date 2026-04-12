@@ -1,0 +1,236 @@
+<div class="slides">
+
+  <!-- ======================================== -->
+  <!-- How — 応用・運用・ガバナンス（14〜17枚） -->
+  <!-- ======================================== -->
+
+  <!-- スライド 14: Obsidian 特有のコツ -->
+  <section>
+    <h2>Obsidian 特有のコツ — ライブデモ③</h2>
+    <div class="content">
+      <p class="lead">4つの便利機能。まずはデイリーノートから始めるのがおすすめ。</p>
+      <div class="grid-2col">
+        <div>
+          <div class="info-card-navy">
+            <p>
+              <strong>1. Templater プラグイン</strong><br>
+              ノート作成時にテンプレートを自動適用。<br>
+              <code>&lt;% tp.date.now("YYYY-MM-DD") %&gt;</code> でフロントマターの <code>created</code> を自動入力。
+            </p>
+          </div>
+          <div class="info-card-navy" style="margin-top: 12px;">
+            <p>
+              <strong>2. デイリーノート</strong><br>
+              日付ごとに1ノート自動生成（<code>daily/2026-04-10.md</code>）。<br>
+              その日の考え・読んだPDF・会議メモを全部ここに放り込む。
+            </p>
+          </div>
+        </div>
+        <div>
+          <div class="info-card-navy">
+            <p>
+              <strong>3. 埋め込み <code>![[...]]</code></strong><br>
+              他ノートをインラインで埋め込む。部分埋め込み（<code>![[note#見出し]]</code>）も可。情報を重複させずに参照できる。
+            </p>
+          </div>
+          <div class="info-card-navy" style="margin-top: 12px;">
+            <p>
+              <strong>4. Outgoing Links パネル</strong><br>
+              いま開いているノートが参照している記事の一覧。バックリンク（逆方向）と合わせて、ノートの文脈を全方向から確認できる。「このノートは何に依存し、何から参照されているか」が一目でわかる。
+            </p>
+          </div>
+          <!-- TODO: スクリーンショット差し替え — Templater / デイリーノート画面 -->
+          <div style="background: #f0f0f0; border: 2px dashed #999; border-radius: 8px; height: 80px; display: flex; align-items: center; justify-content: center; color: #666; font-size: 12pt; text-align: center; margin-top: 12px;">
+            📸 Templater / デイリーノート画面（後ほど差し替え）
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- スライド 15: コンフリクト対策 -->
+  <section>
+    <h2>コンフリクト対策 — 1ファイル1トピックの原則</h2>
+    <div class="content">
+      <p class="lead">ファイルを細分化するだけで、コンフリクトの9割は防げる。</p>
+      <div class="grid-2col">
+        <div>
+          <div class="callout-orange">
+            <p><strong>OneDrive 同期 ≠ リアルタイム共同編集</strong><br>同じ <code>.md</code> を複数人が同時編集するとコンフリクトコピーが発生する。</p>
+          </div>
+          <h3 style="margin-top: 16px;">❌ 悪い例</h3>
+          <pre><code class="language-bash">infra-handbook.md
+  （500行、全領域を網羅した巨大ファイル）</code></pre>
+          <h3>✅ 良い例</h3>
+          <pre><code class="language-bash">infra/
+├── dns-setup.md
+├── dns-failover.md
+├── vpn-config.md
+└── monitoring.md</code></pre>
+        </div>
+        <div>
+          <h3>3つのルール</h3>
+          <ul class="list-lg">
+            <li><strong>1ファイル1トピック</strong> — ファイルを細分化。同じファイルを複数人が同時に触る確率を下げる</li>
+            <li><strong>フロー型は Loop に任せる</strong> — 議事録・リアルタイムコラボは Loop のまま。ストック型だけ Obsidian</li>
+            <li><strong>SharePoint バージョン履歴を保険に</strong> — 最大500バージョン保持。万が一の復元に使う</li>
+          </ul>
+          <!-- TODO: スクリーンショット差し替え — ファイル細分化前後の比較 -->
+          <div style="background: #f0f0f0; border: 2px dashed #999; border-radius: 8px; height: 80px; display: flex; align-items: center; justify-content: center; color: #666; font-size: 12pt; text-align: center; margin-top: 12px;">
+            📸 ファイル細分化前後の比較（後ほど差し替え）
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- スライド 16: 検索の活用 -->
+  <section>
+    <h2>検索の活用 — 二層の検索戦略</h2>
+    <div class="content">
+      <div class="callout-green" style="margin-bottom: 16px;">
+        <p><strong>書く人は Obsidian、読むだけの人は SharePoint。両方が同じファイルを見ている。</strong></p>
+      </div>
+      <div class="grid-2col">
+        <div>
+          <div class="summary-card">
+            <h3>第1層: Obsidian 内検索</h3>
+            <p>Cmd+Shift+F（Mac）/ Ctrl+Shift+F（Win）</p>
+            <ul style="margin-top: 8px; font-size: 0.9em;">
+              <li>全文検索（本文の文字列）</li>
+              <li>タグ検索: <code>tag:#area/infra</code></li>
+              <li>メタデータ検索: <code>[status:published]</code></li>
+              <li>正規表現: <code>/pattern/</code></li>
+            </ul>
+          </div>
+        </div>
+        <div>
+          <div class="summary-card">
+            <h3>第2層: SharePoint 側検索</h3>
+            <p>Obsidian を持っていない人も使える</p>
+            <ul style="margin-top: 8px; font-size: 0.9em;">
+              <li>経営層・他部署メンバーが「ちょっと調べたい」ときに使う</li>
+              <li>Microsoft 365 統合検索（Teams / Outlook と横串）</li>
+              <li>エクスプローラの検索ボックスからも可</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <!-- TODO: スクリーンショット差し替え — Obsidian 検索結果 + SharePoint 検索結果（同じファイルが出る様子） -->
+      <div style="background: #f0f0f0; border: 2px dashed #999; border-radius: 8px; height: 80px; display: flex; align-items: center; justify-content: center; color: #666; font-size: 12pt; text-align: center; margin-top: 16px;">
+        📸 Obsidian 検索結果 + SharePoint 検索結果（同じファイルが出る様子）（後ほど差し替え）
+      </div>
+    </div>
+  </section>
+
+  <!-- スライド 17: セキュリティ・ガバナンス -->
+  <section>
+    <h2>セキュリティ・ガバナンス</h2>
+    <div class="content">
+      <p class="lead">SharePoint がバックエンドなので、ガバナンスは SharePoint に委譲できる。</p>
+      <div class="grid-2col">
+        <div>
+          <h3>権限管理は SharePoint 側で</h3>
+          <ul class="list-lg">
+            <li>Obsidian には権限の概念がない。Vault を開ける人はすべて見える</li>
+            <li>部門ごとにライブラリを分ける</li>
+            <li>機密情報は別ライブラリに隔離し、必要な人だけ同期</li>
+            <li><strong>1つの巨大Vaultにすべて突っ込まない</strong>のがポイント</li>
+          </ul>
+        </div>
+        <div>
+          <div class="callout-red">
+            <p>
+              <strong>Wiki に書いてはいけないもの:</strong><br>
+              個人情報・顧客データ・パスワード<br>
+              → パスワード管理ツールや Key Vault に置き、<strong>Wiki からはリンクだけ書く</strong>
+            </p>
+          </div>
+          <div class="info-card" style="margin-top: 16px;">
+            <p>
+              <strong>退職者対応:</strong><br>
+              アカウントを消しても <code>.md</code> ファイルは SharePoint に残る。<code>author</code> フィールドで文脈が辿れる。ファイルは<strong>ユーザーではなく Vault に帰属</strong>する（Loop では不可能）。
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================== -->
+  <!-- Closing -->
+  <!-- ======================================== -->
+
+  <!-- スライド 18: まとめ -->
+  <section>
+    <h2>まとめ — 明日から始める 3 ステップ</h2>
+    <div class="content">
+      <p class="lead">今日の午後にでも始められる。所要時間は 15 分以内。</p>
+      <div class="grid-3col">
+        <div class="summary-card">
+          <h3>① Vault を立ち上げる</h3>
+          <p>SharePoint ライブラリを1つ選び、「同期」ボタンを押す。同期先フォルダを Obsidian で「Open folder as vault」。<strong>5分で完了。</strong></p>
+        </div>
+        <div class="summary-card">
+          <h3>② 1ノート書く</h3>
+          <p>今日の業務から何か1つ手順や知見をノートに。フロントマターのサンプルをコピペし、<code>title / tags / status</code> だけ埋める。<code>#status/draft</code> で OK。</p>
+        </div>
+        <div class="summary-card">
+          <h3>③ Bases で体感する</h3>
+          <p>Bases にクエリ例をそのまま貼り付ける。<code>#status/draft</code> のノートが一覧に出る。<strong>「これは Loop ではできなかった」</strong>を自分の手で味わう。</p>
+        </div>
+      </div>
+      <div class="callout-green" style="margin-top: 20px;">
+        <p>
+          まずは<strong>一人で Vault を持ってみる</strong>のが最良のスタート。<br>
+          3ノート書いたら、チームへの展開を考えはじめるタイミング。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- スライド 19: Q&A / 参考資料 -->
+  <section>
+    <h2>Q&amp;A / 参考資料</h2>
+    <div class="content">
+      <div class="grid-2col">
+        <div>
+          <h3>公式ドキュメント</h3>
+          <ul class="list-lg">
+            <li>Obsidian 公式: <a href="https://obsidian.md" target="_blank">https://obsidian.md</a></li>
+            <li>Obsidian Help（Vault / Linking / Graph view）: <a href="https://help.obsidian.md" target="_blank">https://help.obsidian.md</a></li>
+            <li>Obsidian Bases: <a href="https://help.obsidian.md/bases" target="_blank">https://help.obsidian.md/bases</a></li>
+            <li>Dataview プラグイン: <a href="https://blacksmithgu.github.io/obsidian-dataview/" target="_blank">blacksmithgu.github.io/obsidian-dataview</a></li>
+            <li>Templater プラグイン: <a href="https://silentvoid13.github.io/Templater/" target="_blank">silentvoid13.github.io/Templater</a></li>
+          </ul>
+          <h3 style="margin-top: 16px;">情報整理フレームワーク</h3>
+          <ul class="list-lg">
+            <li>PARA（Tiago Forte）: <a href="https://fortelabs.com/blog/para" target="_blank">https://fortelabs.com/blog/para</a></li>
+            <li>Zettelkasten 入門: <a href="https://zettelkasten.de" target="_blank">https://zettelkasten.de</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3>SharePoint × OneDrive 同期</h3>
+          <ul class="list-lg">
+            <li>SharePoint ファイルの同期（Microsoft サポート）</li>
+            <li>同期のトラブルシューティング</li>
+          </ul>
+          <div class="info-card" style="margin-top: 16px;">
+            <p>
+              <strong>社内の参考 Vault</strong><br>
+              社内 SharePoint にサンプル Vault を置いてあります。<br>
+              フロントマター雛形・Templater テンプレート・Bases クエリ集の実物入り。<br>
+              各自の Vault 立ち上げ時にコピーしてください。
+            </p>
+          </div>
+          <div class="callout-green" style="margin-top: 12px;">
+            <p>
+              ご質問は Teams の <strong><code>#wiki-ops</code></strong> チャンネルでも受け付けます。
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
